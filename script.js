@@ -179,7 +179,7 @@ function bookmarkUpdate(){
 
 function bookmarkCard(OGObj){
   if (localStorage.getItem('bookmarks')) {
-    console.log("clicked");
+    console.log("bookmarks Found!");
     var id = document.getElementById(OGObj.id).getAttribute('data-id');
     var type = document.getElementById(OGObj.id).getAttribute('data-type');
     console.log(id);
@@ -194,23 +194,24 @@ function bookmarkCard(OGObj){
       //console.log('url', document.getElementById(id).getAttribute('style').split("'")[1].split("'")[0]);
       if (bookmarksJson2.find(tree => parseInt(tree.id) === parseInt(id))) {
         console.log('Found it!');
-        Bookmarks = bookmarksJson2.filter(x => parseInt(x.id) !== parseInt(id));
+        bookmarksJson2 = bookmarksJson2.filter(x => parseInt(x.id) !== parseInt(id));
         OGObj.src = "assets/bookmark.png";
         document.getElementById(OGObj.id).setAttribute('src', 'assets/bookmarkfilled.png');
       }else{
         console.log("Boookmarking IT!");
         OGObj.src = "assets/bookmarkfilled.png";
         document.getElementById(OGObj.id).setAttribute('src', 'assets/bookmark.png');
-        Bookmarks.push(obj);
+        bookmarksJson2.push(obj);
       }
       /*var book = {
           "bookmarks": JSON.stringify(Bo)
       }*/
-      localStorage.setItem('bookmarks', JSON.stringify(Bookmarks));
+      localStorage.setItem('bookmarks', JSON.stringify(bookmarksJson2));
       bookmarkUpdate();
       return;
     }
   } else {
+    console.log("Not Found No Bookmarks Executed!");
     var id = document.getElementById(OGObj.id).getAttribute('data-id');
     var type = document.getElementById(OGObj.id).getAttribute('data-type');
     if (id) {
@@ -233,6 +234,7 @@ function bookmarkCard(OGObj){
 function bookmark() {
   //console.log('Bookmark Clicked!');
   if (localStorage.getItem('bookmarks')) {
+    console.log("bookmarks Found!");
     var id = document.cookie.split('; ').find((row) => row.startsWith('watchId='))?.split('=')[1];
     var type = document.cookie.split('; ').find((row) => row.startsWith('watchType='))?.split('=')[1];
     if (id) {
@@ -245,20 +247,21 @@ function bookmark() {
       //console.log('url', document.getElementById(id).getAttribute('style').split("'")[1].split("'")[0]);
       if (bookmarksJson.find(tree => tree.id === id)) {
         //console.log('Found it!');
-        Bookmarks = bookmarksJson.filter(x => x.id !== id);
+        bookmarksJson = bookmarksJson.filter(x => x.id !== id);
         document.getElementById("bookmarkButton").setAttribute('src', 'assets/bookmarkfilled.png');
       }else{
         document.getElementById("bookmarkButton").setAttribute('src', 'assets/bookmark.png');
-        Bookmarks.push(obj);
+        bookmarksJson.push(obj);
       }
       /*var book = {
           "bookmarks": JSON.stringify(Bo)
       }*/
-      localStorage.setItem('bookmarks', JSON.stringify(Bookmarks));
+      localStorage.setItem('bookmarks', JSON.stringify(bookmarksJson));
       bookmarkUpdate();
       return;
     }
   } else {
+    console.log("Not Found No Bookmarks Executed!");
     var id = document.cookie.split('; ').find((row) => row.startsWith('watchId='))?.split('=')[1];
     var type = document.cookie.split('; ').find((row) => row.startsWith('watchType='))?.split('=')[1];
     if (id) {
