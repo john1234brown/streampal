@@ -1,0 +1,145 @@
+
+
+
+
+
+
+
+
+
+
+
+
+================================================================================================
+Styling for horizontally Scrollable without scrollbar!
+================================================================================================
+#container {
+    width: 300px;
+    height: 60px;
+    overflow: hidden;
+}
+#modules {
+    height: 90px; /* 40px - more place for scrollbar, is hidden under parent box */
+    padding: 5px;
+    white-space: nowrap;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+}
+================================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+how to display Cards
+================================================================================================
+<div class="containerofCards">
+            <ul class="cards">
+              <li class="card">
+                <figure class="card__thumbnail">
+                  <img src="https://m.media-amazon.com/images/M/MV5BMTI1NTg0NjQ2OV5BMl5BanBnXkFtZTYwNTQ3OTc4._V1_.jpg">
+                </figure>
+                <h3 class="card-title">Cheech & Chong's Up In Smoke</h3>
+                <div class="card-content">
+                  <h3>Description</h3>
+                  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+                </div>
+                <div class="card-link-wrapper">
+                  <p class="card-link">1980</p>
+                </div>
+              </li>
+              <li class="card">
+                <div>
+                  <h3 class="card-title">Title</h3>
+                  <div class="card-content">
+                    <h3>Description</h3>
+                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab repudiandae magnam harum natus fuga et repellat in maiores.</p>
+                  </div>
+                </div>
+                <div class="card-link-wrapper">
+                  <p class="card-link"> Year </p>
+                </div>
+              </li>
+            </ul>
+          </div>
+================================================================================================
+
+
+How to generate a Movie or TV Show Card From javascript the required Inserting HTML code
+
+<li class="card">
+    <figure class="card__thumbnail">
+		<img src="https://m.media-amazon.com/images/M/MV5BMTI1NTg0NjQ2OV5BMl5BanBnXkFtZTYwNTQ3OTc4._V1_.jpg">
+	</figure>
+	<h3 class="card-title">${Movie Title}</h3>
+	<div class="card-content">
+		<h3>Description</h3>
+		<p>${Movie Description HERE.}</p>
+	</div>
+	<div class="card-link-wrapper">
+		<p class="card-link">${Release YEAR HERE}</p>
+	</div>
+</li>
+
+
+
+
+
+
+
+
+
+<li class="card" style="background:url(https://m.media-amazon.com/images/M/MV5BMTI1NTg0NjQ2OV5BMl5BanBnXkFtZTYwNTQ3OTc4._V1_.jpg); background-repeat: no-repeat; background-size: cover; background-position: center;">
+    <figure class="card__thumbnail"></figure>
+		<h3 class="card-title">Cheech & Chong's Up In Smoke</h3>
+            <div class="card-content">
+                  <h3>Description</h3>
+                  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+            </div>
+        <div class="card-link-wrapper">
+			<p class="card-link">1980</p>
+    </div>
+</li>
+
+
+
+
+<li id="movieid#234" class="card" style="background:url(https://m.media-amazon.com/images/M/MV5BMTI1NTg0NjQ2OV5BMl5BanBnXkFtZTYwNTQ3OTc4._V1_.jpg); background-repeat: no-repeat; background-size: cover; background-position: center;">
+                  <h3 class="card-title">Cheech & Chong's Up In Smoke</h3>
+                  <figure class="card__thumbnail"></figure>
+                  <div class="card-content">
+                    <h3>Description</h3>
+                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+                  </div>
+                  <div class="card-link-wrapper">
+                    <p class="card-link">1980</p>
+                  </div>
+                </li>
+				
+				
+				
+				
+				
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title> StreamPal: Decentralized Movies & TV Shows!</title>
+  <link rel="icon" type="image/x-icon" href="/assets/logos/TabLogo.png">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- KEEP THIS V so borders work properly on the Table! Under Search! --->
+  <!--<script src="jquery-3.6.3.min.js"></script>-->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="style.css" rel="stylesheet">
+  <script src="script.js"></script>
+</head>
+
+<body>
+  <div id="logobutton" style="background-color: #363845;margin-bottom:0rem;"><img class="logoClass"
+      src="assets/logos/StreamPalLogo.png" style="background: #363845;"></div>
+  <div class="mytabs">
+    <!-- Beginning of About Tab --->
+    <input type="radio" id="tababout" name="mytabs">
+    <label id="tababoutlabel" for="tababout"><b>FAQ</b></label>
+    <div class="tab">
+      <h2 class="mainTitle">FAQ</h2>
+      <ul class="faqClass">
+        <li>
+          <h1>How do i become a file provider in this decentralized space?</h1>
+          <ul class="faqClass">
+            <li>Easy please head on over to the ipfs.tech website and get familiar with IPNS and how to publish to a
+              IPNS once you learn that then your next step will be to download there IPFS Desktop App and then head on
+              over to our ExamplePage!</li>
+            <li><a href="/docs/example.html">Click me to head to the example page for more information!</a></li>
+            <li>You will be required to submit your IPNS CID to our website using our File Provider Submit Page!</li>
+          </ul>
+        </li>
+        <li>
+          <h1>Will i have to worry if my ip is exposed by being a file provider?</h1>
+          <ul class="faqClass">
+            <li>Well im assuming no since ipfs system runs off a CID style communication instead of a IP communication
+              and everything is relayed through there servers as to not risk client ips being accessed!</li>
+          </ul>
+        </li>
+        <li>
+          <h1>Why Decentralized Streaming?</h1>
+          <ul class="faqClass">
+            <li>Well are you tired of constant domain name changes and having to keep up with a new url for watching
+              your free movies and tv shows!</li>
+            <li>Decentralized Streaming offers the chance to solve all of these along with cutting down on Files being
+              removed or took down by a moderated file host provider.</li>
+            <li>When you select what movie you want to watch it will loop through all the known File providers and try
+              and find all the ones which contain the movie you are trying to watch and then finds the one with the best
+              ping rate and starts playing it in your browser!</li>
+            <li>And we auto remove any Unresponsive File providers and readd them to the public list as soon as they are
+              responding again!</li>
+            <li>Our website or anyone elses website may use this public list to stream urls or files from it!</li>
+          </ul>
+        </li>
+        <li>
+          <h1>Question 4?</h1>
+          <ul class="faqClass">
+            <li>Answer 4!</li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+    <!-- End of FAQ Tab --->
+
+
+    <!--Beginning Of Home Tab --->
+    <input type="radio" id="tabhome" name="mytabs">
+    <label id="tabhomelabel" for="tabhome"><b>Home</b></label>
+    <div class="tab">
+      <h2 class="mainTitle">Home</h2>
+      <article style="text-align: right">
+        <div style="display:flexbox;">
+          <div style="background-color:#242424;display:flexbox">
+            <h3 style="text-align:center; line-height: 0; padding-top:1.2rem; padding-bottom:0rem;">Bookmarks</h3>
+            <p style="padding-top:.9rem; padding-bottom:0rem; margin-bottom:0rem;"><input type="checkbox"
+                id="bookmarkMinimize" style="padding-bottom:0rem;"> Minimize</input></p>
+            <p style="padding-top:.9rem; padding-bottom:0rem; margin-bottom:0rem;"><input type="checkbox"
+                id="bookmarkshowAll" style="padding-bottom:0rem;" onclick="bookmarkshowAll(this)"> Show All</input>
+            </p>
+          </div>
+          <span id="Bookmarks">
+            <div class="containerofCards">
+              <ul id="bookmarklist" class="cards">
+              </ul>
+            </div>
+          </span>
+        </div>
+      </article>
+    </div>
+    <!-- End Of Home Tab --->
+
+
+    <!-- Beginning of Genre Tab-->
+    <input type="radio" id="tabgenre" name="mytabs">
+    <label for="tabgenre" id="tabgenrelabel"><b>Genre</b></label>
+    <div class="tab">
+      <h2 class="mainTitle">Genres</h2>
+
+      <div class="tabcontainer" id="enterContainer">
+        <p style="color: white">Here You will do something you want to display a specific genre and to auto hide
+          unwanted genre sections!</p>
+      </div>
+    </div>
+    <!-- End of Genre Tab-->
+
+    <!-- Beginning of Movies Tab --->
+    <input type="radio" id="tabmovies" name="mytabs">
+    <label for="tabmovies" id="tabmovieslabel"><b>Movies</b></label>
+    <div class="tab">
+      <h2 class="mainTitle">Movies</h2>
+      <div class="tabcontainer" id="MovieListContainer">
+        <article style="text-align: right">
+          <div style="display:flexbox;">
+            <div style="background-color:#242424;display:flexbox">
+              <h3 style="text-align:center; line-height: 0; padding-top:1.2rem; padding-bottom:0rem;">Most Popular</h3>
+              <p style="padding-top:.9rem; padding-bottom:0rem; margin-bottom:0rem;"><input type="checkbox"
+                  id="MostPopularMoviesMinimize" style="padding-bottom:0rem;"> Minimize</input></p>
+              <p style="padding-top:.9rem; padding-bottom:0rem; margin-bottom:0rem;"><input type="checkbox"
+                  id="MostPopularMoviesshowAll" style="padding-bottom:0rem;"> Show All</input></p>
+            </div>
+            <span id="MostPopularMovies"></span>
+          </div>
+        </article>
+
+        <article style="text-align: right">
+          <div style="display: flexbox;">
+            <div style="background-color:#025a15; display:flexbox">
+              <h3 style="text-align:center; line-height: 0; padding-top:1.2rem; padding-bottom:0rem;">Top IMDB</h3>
+              <p style="padding-top:.9rem; padding-bottom:0rem; margin-bottom:0rem;"><input type="checkbox"
+                  id="IMDBTopMoviesMinimize"> Minimize</input></p>
+              <p style="padding-top:.9rem; padding-bottom:0rem; margin-bottom:0rem;"><input type="checkbox"
+                  id="IMDBTopMoviesshowAll" style="padding-bottom:0rem;"> Show All</input></p>
+            </div>
+            <span id="IMDBTopMovies"></span>
+          </div>
+        </article>
+
+        <article style="text-align: right">
+          <div style="display:flexbox;">
+            <div style="background-color:#242424;display:flexbox">
+              <h3 style="text-align:center; line-height: 0; padding-top:1.2rem; padding-bottom:0rem;">Newest</h3>
+              <p style="padding-top:.9rem; padding-bottom:0rem; margin-bottom:0rem;"><input type="checkbox"
+                  id="NewestMoviesMinimize" style="padding-bottom:0rem;"> Minimize</input></p>
+              <p style="padding-top:.9rem; padding-bottom:0rem; margin-bottom:0rem;"><input type="checkbox"
+                  id="NewestMoviesshowAll" style="padding-bottom:0rem;"> Show All</input></p>
+            </div>
+            <span id="NewestMovies"></span>
+          </div>
+        </article>
+
+        <article style="text-align: right">
+          <div style="display: flexbox;">
+            <div style="background-color:#025a15; display:flexbox">
+              <h3 style="text-align:center; line-height: 0; padding-top:1.2rem; padding-bottom:0rem;">Stoner Collection
+              </h3>
+              <p style="padding-top:.9rem; padding-bottom:0rem; margin-bottom:0rem;"><input type="checkbox"
+                  id="StonerMoviesMinimize" style="padding-bottom:0rem;"> Minimize</input></p>
+              <p style="padding-top:.9rem; padding-bottom:0rem; margin-bottom:0rem;"><input type="checkbox"
+                  id="StonerMoviesshowAll" style="padding-bottom:0rem;"> Show All</input></p>
+            </div>
+            <span id="StonerMovies">
+              <div class="containerofCards">
+                <ul id="stonermovielist" class="cards">
+                  <li id="movieid#234" class="card" style="background:url(
+                    https://m.media-amazon.com/images/M/MV5BMTI1NTg0NjQ2OV5BMl5BanBnXkFtZTYwNTQ3OTc4._V1_.jpg);
+                    background-repeat: no-repeat; background-size: cover; background-position: center;">
+                    <h3 class="card-title">Cheech & Chong's Up In Smoke</h3>
+                    <figure class="card__thumbnail"></figure>
+                    <div class="card-content">
+                      <h3>Description</h3>
+                      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+                    </div>
+                    <div class="card-link-wrapper">
+                      <p class="card-link">1980</p>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </span>
+          </div>
+        </article>
+        <p>Display Movies within this DIV Container! in a list and turn them into buttons a list of buttons using the
+          movies album art image and the title below basically a button with some html code inside it</p>
+      </div>
+    </div>
+    <!-- End of Movies Tab --->
+
+
+    <!-- Tv Shows --->
+    <input type="radio" id="tabtvshows" name="mytabs">
+    <label for="tabtvshows" id="tabtvlabel"><b>TV Shows</b></label>
+    <div class="tab">
+      <h2 class="mainTitle">TV Shows</h2>
+      <article style="text-align: right">
+        <div style="display:flexbox;">
+          <div style="background-color:#242424;display:flexbox">
+            <h3 style="text-align:center; line-height: 0; padding-top:1.2rem; padding-bottom:0rem;">Most Popular</h3>
+            <p style="padding-top:.9rem; padding-bottom:0rem; margin-bottom:0rem;"><input type="checkbox"
+                id="MostPopularTVMinimize" style="padding-bottom:0rem;"> Minimize</input></p>
+            <p style="padding-top:.9rem; padding-bottom:0rem; margin-bottom:0rem;"><input type="checkbox"
+                id="MostPopularTVshowAll" style="padding-bottom:0rem;" onclick="tvshowAll(3, this)"> Show All</input>
+            </p>
+          </div>
+          <span id="MostPopularTV">
+            <div class="containerofCards">
+              <ul id="populartvlist" class="cards">
+              </ul>
+            </div>
+          </span>
+        </div>
+      </article>
+
+      <article style="text-align: right">
+        <div style="display: flexbox;">
+          <div style="background-color:#025a15; display:flexbox">
+            <h3 style="text-align:center; line-height: 0; padding-top:1.2rem; padding-bottom:0rem;">Top IMDB</h3>
+            <p style="padding-top:.9rem; padding-bottom:0rem; margin-bottom:0rem;"><input type="checkbox"
+                id="IMDBTopTVMinimize"> Minimize</input></p>
+            <p style="padding-top:.9rem; padding-bottom:0rem; margin-bottom:0rem;"><input type="checkbox"
+                id="IMDBTopTVshowAll" style="padding-bottom:0rem;" onclick="tvshowAll(1, this)"> Show All</input></p>
+          </div>
+          <span id="IMDBTopTV">
+            <div class="containerofCards">
+              <ul id="IMDBToptvlist" class="cards">
+              </ul>
+            </div>
+          </span>
+        </div>
+      </article>
+
+      <article style="text-align: right">
+        <div style="display:flexbox;">
+          <div style="background-color:#242424;display:flexbox">
+            <h3 style="text-align:center; line-height: 0; padding-top:1.2rem; padding-bottom:0rem;">Newest</h3>
+            <p style="padding-top:.9rem; padding-bottom:0rem; margin-bottom:0rem;"><input type="checkbox"
+                id="NewestTVMinimize" style="padding-bottom:0rem;"> Minimize</input></p>
+            <p style="padding-top:.9rem; padding-bottom:0rem; margin-bottom:0rem;"><input type="checkbox"
+                id="NewestTVshowAll" style="padding-bottom:0rem;" onclick="tvshowAll(2, this)"> Show All</input></p>
+          </div>
+          <span id="NewestTV">
+            <div class="containerofCards">
+              <ul id="newesttvlist" class="cards">
+              </ul>
+            </div>
+          </span>
+        </div>
+      </article>
+
+      <article style="text-align: right">
+        <div style="display: flexbox;">
+          <div style="background-color:#025a15; display:flexbox">
+            <h3 style="text-align:center; line-height: 0; padding-top:1.2rem; padding-bottom:0rem;">Stoner Flixs</h3>
+            <p style="padding-top:.9rem; padding-bottom:0rem; margin-bottom:0rem;"><input type="checkbox"
+                id="StonerTVMinimize" style="padding-bottom:0rem;"> Minimize</input></p>
+          </div>
+          <span id="StonerTV">
+            <div class="containerofCards">
+              <ul id="stonertvlist" class="cards">
+              </ul>
+            </div>
+          </span>
+        </div>
+      </article>
+    </div>
+
+
+    <!-- Beginning of The Search Tab -->
+    <input type="radio" id="tabsearch" name="mytabs" checked>
+    <label for="tabsearch" id="tabsearchlabel"><b>Search</b></label>
+    <div class="tab">
+      <h2 class="mainTitle">Search For A Movie or TV Show</h2>
+      <div name="SearchContainer" class="containerofCards2">
+        <h1 class="mainTitleseasons">Search</h1>
+        <div class="cards5">
+          <div class="card5"><input id="searchbox"></input></div>
+        </div>
+      </div>
+
+      <div style="display: none;" name="advancedSearchContainer" class="containerofCards2">
+        <h1 class="mainTitleseasons">Advanced Search</h1>
+        <div class="cards2">
+          <div class="card4">By Year:
+            <li><input type="checkbox" checked> All Years Default</input></li>
+            <li><input id="customYear" value="Custom Year Input"></input></li>
+          </div>
+          <div class="card4">By Genre
+            <li><input id="genreCheckboxActionAdventure" type="checkbox"> Action & Adventure</input></li>
+            <li><input id="genreCheckboxAnimation" type="checkbox"> Animation</input></li>
+            <li><input id="genreCheckboxComedy" type="checkbox"> Comedy</input></li>
+            <li><input id="genreCheckboxCrime" type="checkbox"> Crime</input></li>
+            <li><input id="genreCheckboxDocumentary" type="checkbox"> Documentary</input></li>
+            <li><input id="genreCheckboxDrama" type="checkbox"> Drama</input></li>
+            <li><input id="genreCheckboxFamily" type="checkbox"> Family</input></li>
+            <li><input id="genreCheckboxKids" type="checkbox"> Kids</input></li>
+            <li><input id="genreCheckboxMystery" type="checkbox"> Mystery</input></li>
+          </div>
+          <div class="card4">By Genre Continued
+            <li><input id="genreCheckbox" type="checkbox"></input></li>
+            <li><input type="checkbox"></input></li>
+            <li><input type="checkbox"></input></li>
+            <li><input type="checkbox"></input></li>
+            <li><input type="checkbox"></input></li>
+            <li><input type="checkbox"></input></li>
+            <li><input id="genreCheckboxDrama" type="checkbox">Drama</input></li>
+            <li><input id="genreCheckboxDrama" type="checkbox">Drama</input></li>
+            <li><input id="genreCheckboxDrama" type="checkbox">Drama</input></li>
+          </div>
+          <div class="card4">By Country<li><input type="checkbox"></input></li>
+            <li><input type="checkbox"></input></li>
+            <li><input type="checkbox"></input></li>
+            <li><input type="checkbox"></input></li>
+            <li><input type="checkbox"></input></li>
+            <li><input type="checkbox"></input></li>
+          </div>
+          <div class="card4">By Country Continued<li><input type="checkbox"></input></li>
+            <li><input type="checkbox"></input></li>
+            <li><input type="checkbox"></input></li>
+            <li><input type="checkbox"></input></li>
+            <li><input type="checkbox"></input></li>
+            <li><input type="checkbox"></input></li>
+          </div>
+        </div>
+      </div>
+      <div class="containerofCards">
+        <ul id="searchlist" class="cards">
+        </ul>
+      </div>
+      <div name="pagescontainer" class="containerofCards2">
+        <h1 class="mainTitleseasons">Pages</h1>
+        <div id="pagelist" name="pageslist" class="cards2">
+          <div class="card6">1</div>
+          <div class="card6">2</div>
+          <div class="card6">3</div>
+          <div class="card6">4</div>
+          <div class="card6">1</div>
+          <div class="card6">2</div>
+          <div class="card6">3</div>
+          <div class="card6">4</div>
+          <div class="card6">1</div>
+          <div class="card6">2</div>
+          <div class="card6">3</div>
+          <div class="card6">4</div>
+          <div class="card6">1</div>
+          <div class="card6">2</div>
+          <div class="card6">3</div>
+        </div>
+      </div>
+    </div>
+    <!-- END of The Search Tab -->
+
+    <!-- Beginning of The Watch Tab -->
+    <input type="radio" id="tabwatch" name="mytabs">
+    <label for="tabwatch" id="tabwatchlabel"><b>Watch</b></label>
+    <div class="tab">
+      <h2 class="mainTitle">Watch a movie or tv show <img src="assets/bookmark.png" id="bookmarkButton"
+          style="padding-left: 50px;" onclick=" bookmark()">
+      </h2>
+
+      <!-- mkv
+        <video width="320" height="240" controls src="assets/animation.mkv"></video>
+        <-- mp4
+        <video width="320" height="240" controls>
+          <source src="assets/animation.mp4" type="video/mp4" />
+        </video> -->
+      <div id="watchMovieContainer">
+        <iframe sandbox="" id="watchMoviePlayer" class="videoplayer" width="90%" height="800px" src="" frameborder="0"
+          allowfullscreen allow="encrypted-media; media; autoplay" style="display: none;"></iframe>
+        <!-- <video style="display:none;" id="watchMoviePlayer" class="videoplayer" width="90%" height="auto" controls></video> -->
+      </div>
+      <div id="watchTvContainer">
+        <!-- <video style="display:none;" id="StreamPalTvPlayer"class="videoplayer" width="90%" height="auto" controls src="https://bafybeigkquelobekppzd4zncyi7ejbyemzdfwth42a3lxyaeirjcwwxmsq.ipfs.dweb.link/movies/jung_e2023/hd/1.mp4"></video> -->
+        <!-- src="https://databasegdriveplayer.xyz/player.php?type=series&imdb=tt14489308&season=1&episode=3"-->
+        <iframe
+          sandbox="allow-forms allow-modals allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation"
+          id="watchTvPlayer" class="videoplayer" scrolling="no" width="90%" height="980px" src="" frameborder="0"
+          allowfullscreen allow="encrypted-media; media; autoplay"></iframe>
+      </div>
+
+
+      <div id="detailpage">
+        <div id="servercontainer" class="containerofCards2">
+          <h2 class="mainTitleseasons">Servers Ad Free and Sandboxed</h2>
+          <ul id="ServersList" class="cards2">
+            <li class="card2" onclick="updateServer(1)">1</li>
+            <li class="card2" onclick="updateServer(2)">2</li>
+            <li class="card2" onclick="updateServer(3)">3</li>
+          </ul>
+        </div>
+        <div id="servercontainerWithAds" class="containerofCards2">
+          <h2 class="mainTitleseasons">Servers With Ads And Popups Adblocker Required</h2>
+          <ul id="adServersList" class="cards2">
+            <li class="card2" onclick="updateServer(4)">4</li>
+            <li class="card2" onclick="updateServer(5)">5</li>
+          </ul>
+        </div>
+        <div id="filecontainer" class="seasonlist" style="display:none">
+          <h2 class="mainTitleseasons">File Selector</h2>
+          <div id="filelist" class="seasonnumbers">
+            <div class="seasonobj">File 1</div>
+            <div class="seasonobj">File 2</div>
+            <div class="seasonobj">File 3</div>
+            <div class="seasonobj">File 4</div>
+          </div>
+        </div>
+        <div id="urlcontainer" class="seasonlist" style="display:none">
+          <h2 class="mainTitleseasons">Url Selector</h2>
+          <div id="urllist" class="seasonnumbers">
+            <div class="seasonobj">Url 1</div>
+            <div class="seasonobj">Url 2</div>
+            <div class="seasonobj">Url 3</div>
+            <div class="seasonobj">Url 4</div>
+          </div>
+        </div>
+
+        <div id="seasoncontainer" class="containerofCards2">
+          <h2 class="mainTitleseasons">Seasons</h2>
+          <ul id="listofseasons" class="cards2">
+            <div class="card2">Season 1</div>
+            <div class="card2">Season 1</div>
+            <div class="card2">Season 1</div>
+            <div class="card2">Season 1</div>
+          </ul>
+        </div>
+        <div id="episodecontainer" class="containerofCards2">
+          <h2 class="mainTitleseasons">episodes</h2>
+          <div id="listofepisodes" class="cards2">
+            <div class="card3">Episode 1</div>
+            <div class="card3">Episode 2</div>
+            <div class="card3">Episode 3</div>
+            <div class="card3">Episode 4</div>
+            <div class="card3">Episode 1</div>
+            <div class="card3">Episode 2</div>
+            <div class="card3">Episode 3</div>
+            <div class="card3">Episode 4</div>
+            <div class="card3">Episode 1</div>
+            <div class="card3">Episode 2</div>
+            <div class="card3">Episode 3</div>
+            <div class="card3">Episode 4</div>
+            <div class="card3">Episode 1</div>
+            <div class="card3">Episode 2</div>
+            <div class="card3">Episode 3</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <!-- END of The Watch Tab -->
+
+  </div>
+</body>
+
+
+<footer>
+  <p class="footerClass">
+    <span>
+      &copy; &reg;2023 StreamPal MIT
+  </p>
+  <p class="footerClass"> This website does not host any of the files listed or previewed or viewied on our site. So we
+    are not liable for any copyright files please reach out to the file providers if you have any issues!</p>
+  <img class="footerClassImg" src="/assets/footers/banner.png">
+  <span style="display:flex; justify-content: center;">&rightharpoonup;&CupCap;&angmsdaa;</span>
+
+</footer>
+
+</html>

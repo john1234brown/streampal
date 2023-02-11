@@ -1,0 +1,56 @@
+
+Change the # symbols below with the proper data to use it for what ever api calls required!
+dont forget to change the POST AND GET to match properly!
+fetch('https://api.themoviedb.org/#/#/#', {
+    method: 'POST',
+    headers: {
+        'authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkYTljY2JkNDViNmY1MTJjN2E0YWZmMzA5MjIxZDgyOCIsInN1YiI6IjYzZDBhM2M3NjZhZTRkMDA5ZTlkZjY4MSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.N5j1M7YnwmMTjIWMdYQbdh5suW2hCDucbqlDgMku_UA',
+        'content-type': 'application/json;charset=utf-8'
+    }
+});
+
+
+
+
+
+fetch('https://api.themoviedb.org/3/tv/top_rated', {
+    method: 'GET',
+    headers: {
+        'authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkYTljY2JkNDViNmY1MTJjN2E0YWZmMzA5MjIxZDgyOCIsInN1YiI6IjYzZDBhM2M3NjZhZTRkMDA5ZTlkZjY4MSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.N5j1M7YnwmMTjIWMdYQbdh5suW2hCDucbqlDgMku_UA',
+        'content-type': 'application/json;charset=utf-8'
+    }
+});
+
+
+
+
+
+for the image use the backdrop!
+url which is this 
+backdrop_path for the #### symbols
+https://image.tmdb.org/t/p########## 
+
+
+
+
+
+
+
+
+
+stoner tv Keyword Ids
+302399 = 'stoner comedy'
+54169 = 'stoner'
+171235 = 'pothead'
+171401 = 'pot'
+241040 = 'pot plant'
+10776 = 'marijuana'
+195632 = 'medical marijuana'
+245911 = 'marijuana dispensary'
+8224 = 'cannabis'
+258212 = 'medical cannabis'
+195631 = 'gourmet cannabis'
+243617 = 'weed'
+
+stoner movie keywords
+245597 = 'stoner movie'
