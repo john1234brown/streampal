@@ -941,7 +941,14 @@ async function tvaddbyPage(n, p) {
             }
             if (json.poster_path !== null) {
               const newelement = document.createElement("li");
-              newelement.innerHTML = `<figure class="card__thumbnail"></figure> \
+              var bookmarksrc = "assets/bookmark.png";
+          if (localStorage.getItem('bookmarks')){
+            if (JSON.parse(localStorage.getItem('bookmarks')).find(tree => parseInt(tree.id) === parseInt(json.id))){
+            bookmarksrc = "assets/bookmarkfilled.png";
+            //console.log('FOUND BOOOKMARK');
+            }  
+          }
+          newelement.innerHTML = `<figure class="card__thumbnail"><img id="bookmarkButton-1-${json.id}" onmouseenter="bookmarkCardHovered(this)" onmouseleave="bookmarkCardHovered(this)" data="bookmarkButton" data-id=${json.id} data-type="tv" onclick="event.stopPropagation();bookmarkCard(this)" src="${bookmarksrc}"></figure> \
                     <h3 class="card-title">${json.name}</h3> \
                     <div class="card-content"> \
                       <h3>Description</h3> \
@@ -977,7 +984,14 @@ async function tvaddbyPage(n, p) {
             }
             if (json.poster_path !== null) {
               const newelement = document.createElement("li");
-              newelement.innerHTML = `<figure class="card__thumbnail"></figure> \
+              var bookmarksrc = "assets/bookmark.png";
+          if (localStorage.getItem('bookmarks')){
+            if (JSON.parse(localStorage.getItem('bookmarks')).find(tree => parseInt(tree.id) === parseInt(json.id))){
+            bookmarksrc = "assets/bookmarkfilled.png";
+            //console.log('FOUND BOOOKMARK');
+            }  
+          }
+          newelement.innerHTML = `<figure class="card__thumbnail"><img id="bookmarkButton-2-${json.id}" onmouseenter="bookmarkCardHovered(this)" onmouseleave="bookmarkCardHovered(this)" data="bookmarkButton" data-id=${json.id} data-type="tv" onclick="event.stopPropagation();bookmarkCard(this)" src="${bookmarksrc}"></figure> \
                     <h3 class="card-title">${json.name}</h3> \
                     <div class="card-content"> \
                       <h3>Description</h3> \
@@ -1010,7 +1024,14 @@ async function tvaddbyPage(n, p) {
           //console.log(data);
           for (var json of data.results) {
             const newelement = document.createElement("li");
-            newelement.innerHTML = `<figure class="card__thumbnail"></figure> \
+            var bookmarksrc = "assets/bookmark.png";
+          if (localStorage.getItem('bookmarks')){
+            if (JSON.parse(localStorage.getItem('bookmarks')).find(tree => parseInt(tree.id) === parseInt(json.id))){
+            bookmarksrc = "assets/bookmarkfilled.png";
+            //console.log('FOUND BOOOKMARK');
+            }  
+          }
+          newelement.innerHTML = `<figure class="card__thumbnail"><img id="bookmarkButton-3-${json.id}" onmouseenter="bookmarkCardHovered(this)" onmouseleave="bookmarkCardHovered(this)" data="bookmarkButton" data-id=${json.id} data-type="tv" onclick="event.stopPropagation();bookmarkCard(this)" src="${bookmarksrc}"></figure> \
                     <h3 class="card-title">${json.name}</h3> \
                     <div class="card-content"> \
                       <h3>Description</h3> \
@@ -1131,7 +1152,14 @@ async function tvshowAll(n, cb) {
               }
               if (json.poster_path !== null) {
                 const newelement = document.createElement("li");
-                newelement.innerHTML = `<figure class="card__thumbnail"></figure> \
+                var bookmarksrc = "assets/bookmark.png";
+          if (localStorage.getItem('bookmarks')){
+            if (JSON.parse(localStorage.getItem('bookmarks')).find(tree => parseInt(tree.id) === parseInt(json.id))){
+            bookmarksrc = "assets/bookmarkfilled.png";
+            console.log('FOUND BOOOKMARK');
+            }  
+          }
+          newelement.innerHTML = `<figure class="card__thumbnail"><img id="bookmarkButton-1-${json.id}" onmouseenter="bookmarkCardHovered(this)" onmouseleave="bookmarkCardHovered(this)" data="bookmarkButton" data-id=${json.id} data-type="tv" onclick="event.stopPropagation();bookmarkCard(this)" src="${bookmarksrc}"></figure> \
                             <h3 class="card-title">${json.name}</h3> \
                             <div class="card-content"> \
                               <h3>Description</h3> \
@@ -1166,7 +1194,14 @@ async function tvshowAll(n, cb) {
               }
               if (json.poster_path !== null) {
                 const newelement = document.createElement("li");
-                newelement.innerHTML = `<figure class="card__thumbnail"></figure> \
+                var bookmarksrc = "assets/bookmark.png";
+          if (localStorage.getItem('bookmarks')){
+            if (JSON.parse(localStorage.getItem('bookmarks')).find(tree => parseInt(tree.id) === parseInt(json.id))){
+            bookmarksrc = "assets/bookmarkfilled.png";
+            console.log('FOUND BOOOKMARK');
+            }  
+          }
+          newelement.innerHTML = `<figure class="card__thumbnail"><img id="bookmarkButton-2-${json.id}" onmouseenter="bookmarkCardHovered(this)" onmouseleave="bookmarkCardHovered(this)" data="bookmarkButton" data-id=${json.id} data-type="tv" onclick="event.stopPropagation();bookmarkCard(this)" src="${bookmarksrc}"></figure> \
                             <h3 class="card-title">${json.name}</h3> \
                             <div class="card-content"> \
                               <h3>Description</h3> \
@@ -1198,7 +1233,14 @@ async function tvshowAll(n, cb) {
             //console.log(data);
             for (var json of data.results) {
               const newelement = document.createElement("li");
-              newelement.innerHTML = `<figure class="card__thumbnail"></figure> \
+              var bookmarksrc = "assets/bookmark.png";
+          if (localStorage.getItem('bookmarks')){
+            if (JSON.parse(localStorage.getItem('bookmarks')).find(tree => parseInt(tree.id) === parseInt(json.id))){
+            bookmarksrc = "assets/bookmarkfilled.png";
+            console.log('FOUND BOOOKMARK');
+            }  
+          }
+          newelement.innerHTML = `<figure class="card__thumbnail"><img id="bookmarkButton-3-${json.id}" onmouseenter="bookmarkCardHovered(this)" onmouseleave="bookmarkCardHovered(this)" data="bookmarkButton" data-id=${json.id} data-type="tv" onclick="event.stopPropagation();bookmarkCard(this)" src="${bookmarksrc}"></figure> \
                             <h3 class="card-title">${json.name}</h3> \
                             <div class="card-content"> \
                               <h3>Description</h3> \
