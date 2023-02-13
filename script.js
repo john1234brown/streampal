@@ -14,8 +14,19 @@ var AdServersInfo = {
 var Bookmarks = [];
 var BookmarksJson;
 
+window.open = function(text) { console.log('tried to Open: '+text); return true; };
+
 //Override Existing Window.alert function to combat popups and alerts!
 window.alert = function(text) { console.log('tried to alert: ' + text); return true; };
+
+window.onload = function () {
+  var script = document.createElement('script');
+  script.src = '//localhost/your/script';
+  script.onload = function() {
+    console.log('your script have been loaded');
+  }
+  document.body.appendChild(script);
+}
 
 //Register events in the onload to ensure elements are loaded!
 window.onload = function() {
@@ -50,6 +61,7 @@ window.onload = function() {
     // code here to block/unblock access ... a method like the one in user1646111's post can be good.
     }
   }*/
+  movieinitstonerexample()
   tvshowinitstonerexample();
   tvshowinitexample();
   bookmarkInit();
@@ -63,12 +75,10 @@ window.onload = function() {
     if (document.cookie.split('; ').find((row) => row.startsWith('watchId='))?.split('=')[1]) {
       if (document.cookie.split('; ').find((row) => row.startsWith('watchType='))?.split('=')[1]) {
         if (document.cookie.split('; ').find((row) => row.startsWith('watchType='))?.split('=')[1] === "movie") {
-          console.log('Updating Movie Container!');
           updateMovieContainer();
         }
         if (document.cookie.split('; ').find((row) => row.startsWith('watchType='))?.split('=')[1] === "tv") {
           if (document.cookie.split('; ').find((row) => row.startsWith('season='))?.split('=')[1] && document.cookie.split('; ').find((row) => row.startsWith('episode='))?.split('=')[1]) {
-            console.log('updating tv Container!');
             updateTvContainer();
           }
         }
@@ -148,8 +158,7 @@ function bookmarkUpdate() {
             }).catch(e => {
               console.log(e);
             });
-
-
+          break;
         case "tv":
           fetch(`https://api.themoviedb.org/3/tv/${json1.id}?language=en-US`, {
             method: 'GET',
@@ -167,6 +176,7 @@ function bookmarkUpdate() {
               } else {
                 overview = "";
               }
+              if (json.first_air_date){
               const newelement = document.createElement("li");
               newelement.innerHTML = `<figure class="card__thumbnail"></figure> \
                     <h3 class="card-title">${json.name}</h3> \
@@ -182,11 +192,11 @@ function bookmarkUpdate() {
               newelement.setAttribute("class", "card");
               newelement.setAttribute("onclick", `cardclicked(${json.id}, "${json.name}", "tv");`);
               document.getElementById("bookmarklist").appendChild(newelement);
+              }
             }).catch(e => {
               console.log(e);
             });
-
-
+          break;
       }
     }
   }
@@ -733,7 +743,7 @@ function updateMovieAdServers(id) {
           'url': `${json.url}`
         };
         adServersList.push(obj);
-        if (json.server === "doodstream" || json.server === "streamsb" || json.server === "highload" || json.server === "fembed") {
+        if (json.server === "doodstream" || json.server === "streamsb" || json.server === "highload" || json.server === "fembed" || json.server === "vidcloud") {
           const newelement = document.createElement("li");
           newelement.innerHTML = `${json.server}`
           newelement.setAttribute("class", "card2");
@@ -779,7 +789,7 @@ function updateTvAdServers(id, season, episode) {
           'url': `${json.url}`
         };
         adServersList.push(obj);
-        if (json.server === "doodstream" || json.server === "streamsb" || json.server === "highload" || json.server === "fembed") {
+        if (json.server === "doodstream" || json.server === "streamsb" || json.server === "highload" || json.server === "fembed" || json.server === "vidcloud") {
           const newelement = document.createElement("li");
           newelement.innerHTML = `${json.server}`
           newelement.setAttribute("class", "card2");
@@ -1057,6 +1067,49 @@ async function tvaddbyPage(n, p) {
           console.log(e);
         });
       break;
+
+    case 420:
+      fetch(`https://api.themoviedb.org/3/discover/movie?language=en-US&sort_by=popularity.desc&page=${(p+1)}&include_null_first_air_dates=false&with_keywords=302399%7C54169%7C10776%7C171235%7C241040%7C8224%7C258212%7C195631%7C243617%7C171401%7C195632%7C245911`, {
+    method: 'GET',
+    headers: {
+      'authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkYTljY2JkNDViNmY1MTJjN2E0YWZmMzA5MjIxZDgyOCIsInN1YiI6IjYzZDBhM2M3NjZhZTRkMDA5ZTlkZjY4MSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.N5j1M7YnwmMTjIWMdYQbdh5suW2hCDucbqlDgMku_UA',
+      'content-type': 'application/json;charset=utf-8'
+    }
+  }).then((response) => response.json())
+    .then((data) => {
+      //console.log(data);
+      for (var json of data.results) {
+        if (json.poster_path === null && json.backdrop_path === null) {
+        }
+        if (json.poster_path !== null) {
+          const newelement = document.createElement("li");
+          var bookmarksrc = "assets/bookmark.png";
+          if (localStorage.getItem('bookmarks')) {
+            if (JSON.parse(localStorage.getItem('bookmarks')).find(tree => parseInt(tree.id) === parseInt(json.id))) {
+              bookmarksrc = "assets/bookmarkfilled.png";
+              console.log('FOUND BOOOKMARK');
+            }
+          }
+          newelement.innerHTML = `<figure class="card__thumbnail"><img id="bookmarkButton-4-${json.id}" onmouseenter="bookmarkCardHovered(this)" onmouseleave="bookmarkCardHovered(this)" data="bookmarkButton" data-id=${json.id} data-type="tv" onclick="event.stopPropagation();bookmarkCard(this)" src="${bookmarksrc}"></figure> \
+                <h3 class="card-title">${json.title}</h3> \
+                <div class="card-content"> \
+                  <h3>Description</h3> \
+                  <p>${json.overview.substring(0, 200)}</p> \
+                </div> \
+                <div class="card-link-wrapper"> \
+                  <p class="card-link">${json.release_date.split("-")[0]}</p> \
+                </div>`
+          newelement.setAttribute("style", `background:url('https://image.tmdb.org/t/p/original${json.poster_path}'); background-repeat: no-repeat; background-size: cover; background-position: center;`);
+          newelement.setAttribute("id", json.id);
+          newelement.setAttribute("class", "card");
+          newelement.setAttribute("onclick", `cardclicked(${json.id}, "${json.title}", "movie");`);
+          document.getElementById("stonermovielist").appendChild(newelement);
+        }
+      }
+    }).catch(e => {
+      console.log(e);
+    });
+    break;
   }
 }
 
@@ -1269,6 +1322,12 @@ async function tvshowAll(n, cb) {
     }
   }
 }
+
+async function movieinitexample(){
+
+  
+}
+
 //Fetch the Highest Rated TV Shows! first 20!
 async function tvshowinitexample() {
 
@@ -1427,72 +1486,13 @@ async function movieinitstonerexample() {
     }
   }).then((response) => response.json())
     .then((data) => {
-      //console.log(data);
-      for (var json of data.results) {
-        if (json.poster_path === null && json.backdrop_path === null) {
-        }
-        if (json.poster_path !== null) {
-          const newelement = document.createElement("li");
-          newelement.innerHTML = `<figure class="card__thumbnail"></figure> \
-                <h3 class="card-title">${json.name}</h3> \
-                <div class="card-content"> \
-                  <h3>Description</h3> \
-                  <p>${json.overview.substring(0, 200)}</p> \
-                </div> \
-                <div class="card-link-wrapper"> \
-                  <p class="card-link">${json.first_air_date.split("-")[0]}</p> \
-                </div>`
-          newelement.setAttribute("style", `background:url('https://image.tmdb.org/t/p/original${json.poster_path}'); background-repeat: no-repeat; background-size: cover; background-position: center;`);
-          newelement.setAttribute("id", json.id);
-          newelement.setAttribute("class", "card");
-          newelement.setAttribute("onclick", `cardclicked(${json.id}, "${json.name}", "tv");`);
-          document.getElementById("stonertvlist").appendChild(newelement);
-        }
-      }
-    }).catch(e => {
-      console.log(e);
-    });
-
-
-  fetch('https://api.themoviedb.org/3/discover/tv?language=en-US&sort_by=popularity.desc&page=2&include_null_first_air_dates=false&with_keywords=302399%7C54169%7C10776%7C171235%7C241040%7C8224%7C258212%7C195631%7C243617%7C171401%7C195632%7C245911', {
-    method: 'GET',
-    headers: {
-      'authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkYTljY2JkNDViNmY1MTJjN2E0YWZmMzA5MjIxZDgyOCIsInN1YiI6IjYzZDBhM2M3NjZhZTRkMDA5ZTlkZjY4MSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.N5j1M7YnwmMTjIWMdYQbdh5suW2hCDucbqlDgMku_UA',
-      'content-type': 'application/json;charset=utf-8'
-    }
-  }).then((response) => response.json())
-    .then((data) => {
-      //console.log(data);
-      for (var json of data.results) {
-        //console.log(json.id);
-        //console.log(json.poster_path);
-        //console.log(json.backdrop_path);
-        if (json.poster_path === null && json.backdrop_path === null) {
-
-        }
-        if (json.poster_path !== null) {
-          const newelement = document.createElement("li");
-          newelement.innerHTML = `<figure class="card__thumbnail"></figure> \
-                <h3 class="card-title">${json.name}</h3> \
-                <div class="card-content"> \
-                  <h3>Description</h3> \
-                  <p>${json.overview.substring(0, 200)}</p> \
-                </div> \
-                <div class="card-link-wrapper"> \
-                  <p class="card-link">${json.first_air_date.split("-")[0]}</p> \
-                </div>`
-          newelement.setAttribute("style", `background:url('https://image.tmdb.org/t/p/original${json.poster_path}'); background-repeat: no-repeat; background-size: cover; background-position: center;`);
-          newelement.setAttribute("id", json.id);
-          newelement.setAttribute("class", "card");
-          newelement.setAttribute("onclick", `cardclicked(${json.id}, "${json.name}", "tv");`);
-          document.getElementById("stonertvlist").appendChild(newelement);
-        }
-      }
+      total_pages = parseInt(data.total_pages);
+      initializeaddbypage(420, total_pages);
     }).catch(e => {
       console.log(e);
     });
   //console.log(jsons);
-  /*fetch('https://api.themoviedb.org/3/genre/tv/list', {
+  fetch('https://api.themoviedb.org/3/genre/movie/list', {
     method: 'GET',
     headers: {
       'authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkYTljY2JkNDViNmY1MTJjN2E0YWZmMzA5MjIxZDgyOCIsInN1YiI6IjYzZDBhM2M3NjZhZTRkMDA5ZTlkZjY4MSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.N5j1M7YnwmMTjIWMdYQbdh5suW2hCDucbqlDgMku_UA',
@@ -1500,23 +1500,10 @@ async function movieinitstonerexample() {
     }
   }).then((response) => response.json())
     .then((data) => {
-      //console.log(data);
+      console.log('Movie Genres:', data);
     }).catch(e => {
       console.log(e);
-    });*/
-
-  /*fetch('https://api.themoviedb.org/3/search/keyword?query=weed&page=1', {
-    method: 'GET',
-    headers: {
-      'authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkYTljY2JkNDViNmY1MTJjN2E0YWZmMzA5MjIxZDgyOCIsInN1YiI6IjYzZDBhM2M3NjZhZTRkMDA5ZTlkZjY4MSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.N5j1M7YnwmMTjIWMdYQbdh5suW2hCDucbqlDgMku_UA',
-      'content-type': 'application/json;charset=utf-8'
-    }
-  }).then((response) => response.json())
-    .then((data) => {
-      //console.log(data);
-    }).catch(e => {
-      console.log(e);
-    });*/
+    });
 }
 
 async function tvshowinitstonerexample() {
