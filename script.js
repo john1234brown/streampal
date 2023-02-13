@@ -67,7 +67,7 @@ window.onload = function() {
         }
         if (document.cookie.split('; ').find((row) => row.startsWith('watchType='))?.split('=')[1] === "tv") {
           if (document.cookie.split('; ').find((row) => row.startsWith('season='))?.split('=')[1] && document.cookie.split('; ').find((row) => row.startsWith('episode='))?.split('=')[1]) {
-            updateTvContainer(document.cookie.split('; ').find((row) => row.startsWith('watchType='))?.split('=')[1], document.cookie.split('; ').find((row) => row.startsWith('='))?.split('=')[1]);
+            updateTvContainer();
           }
         }
       }
