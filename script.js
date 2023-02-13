@@ -63,10 +63,12 @@ window.onload = function() {
     if (document.cookie.split('; ').find((row) => row.startsWith('watchId='))?.split('=')[1]) {
       if (document.cookie.split('; ').find((row) => row.startsWith('watchType='))?.split('=')[1]) {
         if (document.cookie.split('; ').find((row) => row.startsWith('watchType='))?.split('=')[1] === "movie") {
+          console.log('Updating Movie Container!');
           updateMovieContainer();
         }
         if (document.cookie.split('; ').find((row) => row.startsWith('watchType='))?.split('=')[1] === "tv") {
           if (document.cookie.split('; ').find((row) => row.startsWith('season='))?.split('=')[1] && document.cookie.split('; ').find((row) => row.startsWith('episode='))?.split('=')[1]) {
+            console.log('updating tv Container!');
             updateTvContainer();
           }
         }
