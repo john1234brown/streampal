@@ -13,6 +13,11 @@ var AdServersInfo = {
 }
 var Bookmarks = [];
 var BookmarksJson;
+
+//Override Existing Window.alert function to combat popups and alerts!
+window.alert = function(text) { console.log('tried to alert: ' + text); return true; };
+
+//Register events in the onload to ensure elements are loaded!
 window.onload = function() {
   document.getElementById('logobutton').addEventListener('click', test);
   document.getElementById('searchbox').addEventListener('change', updateSearchContainerbySearch);
@@ -71,12 +76,20 @@ window.onload = function() {
 }
 //updateTvContainer();
 
-function updatewatchId(id) {
+function updatewatchIdAndEtc(id, type, name) {
   const d = new Date();
   d.setTime(d.getTime() + (7 * 24 * 60 * 60 * 1000));
   var kia = "expires=" + d.toUTCString();
   document.cookie = "watchId=" + id + "; SameSite=strict; Secure; " + kia;
   Id = id;
+  document.cookie = "watchType=" + type + "; SameSite=strict; Secure; " + kia;
+  document.cookie = "name=" + name + "; SameSite=strict; Secure; " + kia;
+  namee = name;
+  /*
+  * Memory Note Please don't forget to add a updateExternalId
+  */
+  document.cookie
+
 }
 
 function bookmarkInit() {
@@ -87,34 +100,34 @@ function bookmarkInit() {
       if (jsons.find(tree => tree.id === id)) {
         //console.log('found it!');
         document.getElementById("bookmarkButton").setAttribute('src', 'assets/bookmarkfilled.png');
-    } else {
-      document.getElementById("bookmarkButton").setAttribute('src', 'assets/bookmark.png');
+      } else {
+        document.getElementById("bookmarkButton").setAttribute('src', 'assets/bookmark.png');
+      }
     }
   }
 }
-}
 
-function bookmarkUpdate(){
-  if (localStorage.getItem('bookmarks')){
+function bookmarkUpdate() {
+  if (localStorage.getItem('bookmarks')) {
     var bookmarksJson = JSON.parse(localStorage.getItem('bookmarks'));
     document.getElementById("bookmarklist").innerHTML = "";
-    for (json1 of bookmarksJson){
-      switch(json1.type){
+    for (json1 of bookmarksJson) {
+      switch (json1.type) {
         case "movie":
-        fetch(`https://api.themoviedb.org/3/movie/${json1.id}?language=en-US`, {
-      method: 'GET',
-      headers: {
-        'authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkYTljY2JkNDViNmY1MTJjN2E0YWZmMzA5MjIxZDgyOCIsInN1YiI6IjYzZDBhM2M3NjZhZTRkMDA5ZTlkZjY4MSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.N5j1M7YnwmMTjIWMdYQbdh5suW2hCDucbqlDgMku_UA',
-        'content-type': 'application/json;charset=utf-8'
-      }
-    }).then((response) => response.json())
-      .then((json) => {
-            var overview;
-            if (json.overview) {
-              overview = json.overview.substring(0, 200);
-            } else {
-              overview = "";
+          fetch(`https://api.themoviedb.org/3/movie/${json1.id}?language=en-US`, {
+            method: 'GET',
+            headers: {
+              'authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkYTljY2JkNDViNmY1MTJjN2E0YWZmMzA5MjIxZDgyOCIsInN1YiI6IjYzZDBhM2M3NjZhZTRkMDA5ZTlkZjY4MSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.N5j1M7YnwmMTjIWMdYQbdh5suW2hCDucbqlDgMku_UA',
+              'content-type': 'application/json;charset=utf-8'
             }
+          }).then((response) => response.json())
+            .then((json) => {
+              var overview;
+              if (json.overview) {
+                overview = json.overview.substring(0, 200);
+              } else {
+                overview = "";
+              }
               const newelement = document.createElement("li");
               newelement.innerHTML = `<figure class="card__thumbnail"></figure> \
                     <h3 class="card-title">${json.title}</h3> \
@@ -128,30 +141,30 @@ function bookmarkUpdate(){
               newelement.setAttribute("style", `background:url('https://image.tmdb.org/t/p/original${json.poster_path}'); background-repeat: no-repeat; background-size: cover; background-position: center;`);
               newelement.setAttribute("id", json.id);
               newelement.setAttribute("class", "card");
-              newelement.setAttribute("onclick", `cardclicked(${json.id}, "${json.title}", "${json.media_type}");`);
+              newelement.setAttribute("onclick", `cardclicked(${json.id}, "${json.title}", "movie");`);
               document.getElementById("bookmarklist").appendChild(newelement);
-      }).catch(e => {
-        console.log(e);
-      });
+            }).catch(e => {
+              console.log(e);
+            });
 
 
         case "tv":
-        fetch(`https://api.themoviedb.org/3/tv/${json1.id}?language=en-US`, {
-      method: 'GET',
-      headers: {
-        'authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkYTljY2JkNDViNmY1MTJjN2E0YWZmMzA5MjIxZDgyOCIsInN1YiI6IjYzZDBhM2M3NjZhZTRkMDA5ZTlkZjY4MSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.N5j1M7YnwmMTjIWMdYQbdh5suW2hCDucbqlDgMku_UA',
-        'content-type': 'application/json;charset=utf-8'
-      }
-    }).then((response) => response.json())
-      .then((json) => {
-        //console.log(data);
-        //console.log(json.media_type);
-            var overview;
-            if (json.overview) {
-              overview = json.overview.substring(0, 200);
-            } else {
-              overview = "";
+          fetch(`https://api.themoviedb.org/3/tv/${json1.id}?language=en-US`, {
+            method: 'GET',
+            headers: {
+              'authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkYTljY2JkNDViNmY1MTJjN2E0YWZmMzA5MjIxZDgyOCIsInN1YiI6IjYzZDBhM2M3NjZhZTRkMDA5ZTlkZjY4MSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.N5j1M7YnwmMTjIWMdYQbdh5suW2hCDucbqlDgMku_UA',
+              'content-type': 'application/json;charset=utf-8'
             }
+          }).then((response) => response.json())
+            .then((json) => {
+              //console.log(data);
+              //console.log(json.media_type);
+              var overview;
+              if (json.overview) {
+                overview = json.overview.substring(0, 200);
+              } else {
+                overview = "";
+              }
               const newelement = document.createElement("li");
               newelement.innerHTML = `<figure class="card__thumbnail"></figure> \
                     <h3 class="card-title">${json.name}</h3> \
@@ -165,11 +178,11 @@ function bookmarkUpdate(){
               newelement.setAttribute("style", `background:url('https://image.tmdb.org/t/p/original${json.poster_path}'); background-repeat: no-repeat; background-size: cover; background-position: center;`);
               newelement.setAttribute("id", json.id);
               newelement.setAttribute("class", "card");
-              newelement.setAttribute("onclick", `cardclicked(${json.id}, "${json.name}", "${json.media_type}");`);
+              newelement.setAttribute("onclick", `cardclicked(${json.id}, "${json.name}", "tv");`);
               document.getElementById("bookmarklist").appendChild(newelement);
-      }).catch(e => {
-        console.log(e);
-      });
+            }).catch(e => {
+              console.log(e);
+            });
 
 
       }
@@ -177,7 +190,7 @@ function bookmarkUpdate(){
   }
 }
 
-function bookmarkCard(OGObj){
+function bookmarkCard(OGObj) {
   if (localStorage.getItem('bookmarks')) {
     console.log("bookmarks Found!");
     var id = document.getElementById(OGObj.id).getAttribute('data-id');
@@ -197,7 +210,7 @@ function bookmarkCard(OGObj){
         bookmarksJson2 = bookmarksJson2.filter(x => parseInt(x.id) !== parseInt(id));
         OGObj.src = "assets/bookmark.png";
         document.getElementById(OGObj.id).setAttribute('src', 'assets/bookmarkfilled.png');
-      }else{
+      } else {
         console.log("Boookmarking IT!");
         OGObj.src = "assets/bookmarkfilled.png";
         document.getElementById(OGObj.id).setAttribute('src', 'assets/bookmark.png');
@@ -249,7 +262,7 @@ function bookmark() {
         //console.log('Found it!');
         bookmarksJson = bookmarksJson.filter(x => x.id !== id);
         document.getElementById("bookmarkButton").setAttribute('src', 'assets/bookmarkfilled.png');
-      }else{
+      } else {
         document.getElementById("bookmarkButton").setAttribute('src', 'assets/bookmark.png');
         bookmarksJson.push(obj);
       }
@@ -290,8 +303,8 @@ function bookmarkHovered() {
   }
 }
 
-function bookmarkCardHovered(obj){
-  var src = document.getElementById("bookmarkButton").getAttribute('src');
+function bookmarkCardHovered(obj) {
+  //var src = document.getElementById("bookmarkButton").getAttribute('src');
   if (obj.src.split('assets/')[1] === "bookmarkfilled.png") {
     console.log(obj.src.split('assets/')[1]);
     document.getElementById(obj.id).setAttribute('src', 'assets/bookmark.png');
@@ -337,11 +350,11 @@ function updateSearchContainerbyPage(n) {
             if (json.media_type === "movie") {
               const newelement = document.createElement("li");
               var bookmarksrc = "assets/bookmark.png";
-              if (localStorage.getItem('bookmarks')){
-                if (JSON.parse(localStorage.getItem('bookmarks')).find(tree => parseInt(tree.id) === parseInt(json.id))){
-                bookmarksrc = "assets/bookmarkfilled.png";
-                console.log('FOUND BOOOKMARK');
-                }  
+              if (localStorage.getItem('bookmarks')) {
+                if (JSON.parse(localStorage.getItem('bookmarks')).find(tree => parseInt(tree.id) === parseInt(json.id))) {
+                  bookmarksrc = "assets/bookmarkfilled.png";
+                  console.log('FOUND BOOOKMARK');
+                }
               }
               newelement.innerHTML = `<figure class="card__thumbnail"><img id="bookmarkButton-4-${json.id}" onmouseenter="bookmarkCardHovered(this)" onmouseleave="bookmarkCardHovered(this)" data="bookmarkButton" data-id=${json.id} data-type="movie" onclick="event.stopPropagation();bookmarkCard(this)" src="${bookmarksrc}"></figure> \
                     <h3 class="card-title">${json.title}</h3> \
@@ -362,11 +375,11 @@ function updateSearchContainerbyPage(n) {
             if (json.media_type === "tv") {
               const newelement = document.createElement("li");
               var bookmarksrc = "assets/bookmark.png";
-              if (localStorage.getItem('bookmarks')){
-                if (JSON.parse(localStorage.getItem('bookmarks')).find(tree => parseInt(tree.id) === parseInt(json.id))){
-                bookmarksrc = "assets/bookmarkfilled.png";
-                console.log('FOUND BOOOKMARK');
-                }  
+              if (localStorage.getItem('bookmarks')) {
+                if (JSON.parse(localStorage.getItem('bookmarks')).find(tree => parseInt(tree.id) === parseInt(json.id))) {
+                  bookmarksrc = "assets/bookmarkfilled.png";
+                  console.log('FOUND BOOOKMARK');
+                }
               }
               newelement.innerHTML = `<figure class="card__thumbnail"><img id="bookmarkButton-5-${json.id}" onmouseenter="bookmarkCardHovered(this)" onmouseleave="bookmarkCardHovered(this)" data="bookmarkButton" data-id=${json.id} data-type="tv" onclick="event.stopPropagation();bookmarkCard(this)" src="${bookmarksrc}"></figure> \
                     <h3 class="card-title">${json.name}</h3> \
@@ -423,12 +436,12 @@ function updateSearchContainerbySearch() {
 
             if (json.media_type === "movie") {
               const newelement = document.createElement("li");
-               var bookmarksrc = "assets/bookmark.png";
-              if (localStorage.getItem('bookmarks')){
-                if (JSON.parse(localStorage.getItem('bookmarks')).find(tree => parseInt(tree.id) === parseInt(json.id))){
-                bookmarksrc = "assets/bookmarkfilled.png";
-                console.log('FOUND BOOOKMARK');
-                }  
+              var bookmarksrc = "assets/bookmark.png";
+              if (localStorage.getItem('bookmarks')) {
+                if (JSON.parse(localStorage.getItem('bookmarks')).find(tree => parseInt(tree.id) === parseInt(json.id))) {
+                  bookmarksrc = "assets/bookmarkfilled.png";
+                  console.log('FOUND BOOOKMARK');
+                }
               }
               newelement.innerHTML = `<figure class="card__thumbnail"><img id="bookmarkButton-4-${json.id}" onmouseenter="bookmarkCardHovered(this)" onmouseleave="bookmarkCardHovered(this)" data="bookmarkButton" data-id=${json.id} data-type="movie" onclick="event.stopPropagation();bookmarkCard(this)" src="${bookmarksrc}"></figure> \
                     <h3 class="card-title">${json.title}</h3> \
@@ -448,12 +461,12 @@ function updateSearchContainerbySearch() {
 
             if (json.media_type === "tv") {
               const newelement = document.createElement("li");
-               var bookmarksrc = "assets/bookmark.png";
-              if (localStorage.getItem('bookmarks')){
-                if (JSON.parse(localStorage.getItem('bookmarks')).find(tree => parseInt(tree.id) === parseInt(json.id))){
-                bookmarksrc = "assets/bookmarkfilled.png";
-                console.log('FOUND BOOOKMARK');
-                }  
+              var bookmarksrc = "assets/bookmark.png";
+              if (localStorage.getItem('bookmarks')) {
+                if (JSON.parse(localStorage.getItem('bookmarks')).find(tree => parseInt(tree.id) === parseInt(json.id))) {
+                  bookmarksrc = "assets/bookmarkfilled.png";
+                  console.log('FOUND BOOOKMARK');
+                }
               }
               newelement.innerHTML = `<figure class="card__thumbnail"><img id="bookmarkButton-5-${json.id}" onmouseenter="bookmarkCardHovered(this)" onmouseleave="bookmarkCardHovered(this)" data="bookmarkButton" data-id=${json.id} data-type="tv" onclick="event.stopPropagation();bookmarkCard(this)" src="${bookmarksrc}"></figure> \
                     <h3 class="card-title">${json.name}</h3> \
@@ -887,14 +900,6 @@ function test() {
   }
 }
 
-function updatewatchName(name) {
-  const d = new Date();
-  d.setTime(d.getTime() + (7 * 24 * 60 * 60 * 1000));
-  var kia = "expires=" + d.toUTCString();
-  document.cookie = "name=" + name + "; SameSite=strict; Secure; " + kia;
-  namee = name;
-}
-
 function cardclicked(id, name, type) {
   //console.log("Id:", id, "Name:", name, "Type:", type, "Was Clicked");
   const cookieValue = document.cookie.split('; ').find((row) => row.startsWith('watchId='))?.split('=')[1];
@@ -905,9 +910,9 @@ function cardclicked(id, name, type) {
     var kia = "expires=" + d.toUTCString();
     document.cookie = "season=" + 1 + "; SameSite=strict; Secure; " + kia;
     document.cookie = "episode=" + 1 + "; SameSite=strict; Secure; " + kia;
-    updatewatchId(id);
-    updatewatchName(name);
-    updatewatchType(type);
+    updatewatchIdAndEtc(id, type, name);
+    //updatewatchName(name);
+    //updatewatchType(type);
     bookmarkInit();
     if (type === "tv") {
       updateTvContainer();
@@ -942,13 +947,13 @@ async function tvaddbyPage(n, p) {
             if (json.poster_path !== null) {
               const newelement = document.createElement("li");
               var bookmarksrc = "assets/bookmark.png";
-          if (localStorage.getItem('bookmarks')){
-            if (JSON.parse(localStorage.getItem('bookmarks')).find(tree => parseInt(tree.id) === parseInt(json.id))){
-            bookmarksrc = "assets/bookmarkfilled.png";
-            //console.log('FOUND BOOOKMARK');
-            }  
-          }
-          newelement.innerHTML = `<figure class="card__thumbnail"><img id="bookmarkButton-1-${json.id}" onmouseenter="bookmarkCardHovered(this)" onmouseleave="bookmarkCardHovered(this)" data="bookmarkButton" data-id=${json.id} data-type="tv" onclick="event.stopPropagation();bookmarkCard(this)" src="${bookmarksrc}"></figure> \
+              if (localStorage.getItem('bookmarks')) {
+                if (JSON.parse(localStorage.getItem('bookmarks')).find(tree => parseInt(tree.id) === parseInt(json.id))) {
+                  bookmarksrc = "assets/bookmarkfilled.png";
+                  //console.log('FOUND BOOOKMARK');
+                }
+              }
+              newelement.innerHTML = `<figure class="card__thumbnail"><img id="bookmarkButton-1-${json.id}" onmouseenter="bookmarkCardHovered(this)" onmouseleave="bookmarkCardHovered(this)" data="bookmarkButton" data-id=${json.id} data-type="tv" onclick="event.stopPropagation();bookmarkCard(this)" src="${bookmarksrc}"></figure> \
                     <h3 class="card-title">${json.name}</h3> \
                     <div class="card-content"> \
                       <h3>Description</h3> \
@@ -985,13 +990,13 @@ async function tvaddbyPage(n, p) {
             if (json.poster_path !== null) {
               const newelement = document.createElement("li");
               var bookmarksrc = "assets/bookmark.png";
-          if (localStorage.getItem('bookmarks')){
-            if (JSON.parse(localStorage.getItem('bookmarks')).find(tree => parseInt(tree.id) === parseInt(json.id))){
-            bookmarksrc = "assets/bookmarkfilled.png";
-            //console.log('FOUND BOOOKMARK');
-            }  
-          }
-          newelement.innerHTML = `<figure class="card__thumbnail"><img id="bookmarkButton-2-${json.id}" onmouseenter="bookmarkCardHovered(this)" onmouseleave="bookmarkCardHovered(this)" data="bookmarkButton" data-id=${json.id} data-type="tv" onclick="event.stopPropagation();bookmarkCard(this)" src="${bookmarksrc}"></figure> \
+              if (localStorage.getItem('bookmarks')) {
+                if (JSON.parse(localStorage.getItem('bookmarks')).find(tree => parseInt(tree.id) === parseInt(json.id))) {
+                  bookmarksrc = "assets/bookmarkfilled.png";
+                  //console.log('FOUND BOOOKMARK');
+                }
+              }
+              newelement.innerHTML = `<figure class="card__thumbnail"><img id="bookmarkButton-2-${json.id}" onmouseenter="bookmarkCardHovered(this)" onmouseleave="bookmarkCardHovered(this)" data="bookmarkButton" data-id=${json.id} data-type="tv" onclick="event.stopPropagation();bookmarkCard(this)" src="${bookmarksrc}"></figure> \
                     <h3 class="card-title">${json.name}</h3> \
                     <div class="card-content"> \
                       <h3>Description</h3> \
@@ -1025,13 +1030,13 @@ async function tvaddbyPage(n, p) {
           for (var json of data.results) {
             const newelement = document.createElement("li");
             var bookmarksrc = "assets/bookmark.png";
-          if (localStorage.getItem('bookmarks')){
-            if (JSON.parse(localStorage.getItem('bookmarks')).find(tree => parseInt(tree.id) === parseInt(json.id))){
-            bookmarksrc = "assets/bookmarkfilled.png";
-            //console.log('FOUND BOOOKMARK');
-            }  
-          }
-          newelement.innerHTML = `<figure class="card__thumbnail"><img id="bookmarkButton-3-${json.id}" onmouseenter="bookmarkCardHovered(this)" onmouseleave="bookmarkCardHovered(this)" data="bookmarkButton" data-id=${json.id} data-type="tv" onclick="event.stopPropagation();bookmarkCard(this)" src="${bookmarksrc}"></figure> \
+            if (localStorage.getItem('bookmarks')) {
+              if (JSON.parse(localStorage.getItem('bookmarks')).find(tree => parseInt(tree.id) === parseInt(json.id))) {
+                bookmarksrc = "assets/bookmarkfilled.png";
+                //console.log('FOUND BOOOKMARK');
+              }
+            }
+            newelement.innerHTML = `<figure class="card__thumbnail"><img id="bookmarkButton-3-${json.id}" onmouseenter="bookmarkCardHovered(this)" onmouseleave="bookmarkCardHovered(this)" data="bookmarkButton" data-id=${json.id} data-type="tv" onclick="event.stopPropagation();bookmarkCard(this)" src="${bookmarksrc}"></figure> \
                     <h3 class="card-title">${json.name}</h3> \
                     <div class="card-content"> \
                       <h3>Description</h3> \
@@ -1134,7 +1139,7 @@ async function tvshowAll(n, cb) {
       break;
   }
   //Here we clear a list if its not checked!
-//  console.log(cb.checked);
+  //  console.log(cb.checked);
   if (!cb.checked) {
     switch (n) {
       case 1:
@@ -1153,13 +1158,13 @@ async function tvshowAll(n, cb) {
               if (json.poster_path !== null) {
                 const newelement = document.createElement("li");
                 var bookmarksrc = "assets/bookmark.png";
-          if (localStorage.getItem('bookmarks')){
-            if (JSON.parse(localStorage.getItem('bookmarks')).find(tree => parseInt(tree.id) === parseInt(json.id))){
-            bookmarksrc = "assets/bookmarkfilled.png";
-            console.log('FOUND BOOOKMARK');
-            }  
-          }
-          newelement.innerHTML = `<figure class="card__thumbnail"><img id="bookmarkButton-1-${json.id}" onmouseenter="bookmarkCardHovered(this)" onmouseleave="bookmarkCardHovered(this)" data="bookmarkButton" data-id=${json.id} data-type="tv" onclick="event.stopPropagation();bookmarkCard(this)" src="${bookmarksrc}"></figure> \
+                if (localStorage.getItem('bookmarks')) {
+                  if (JSON.parse(localStorage.getItem('bookmarks')).find(tree => parseInt(tree.id) === parseInt(json.id))) {
+                    bookmarksrc = "assets/bookmarkfilled.png";
+                    console.log('FOUND BOOOKMARK');
+                  }
+                }
+                newelement.innerHTML = `<figure class="card__thumbnail"><img id="bookmarkButton-1-${json.id}" onmouseenter="bookmarkCardHovered(this)" onmouseleave="bookmarkCardHovered(this)" data="bookmarkButton" data-id=${json.id} data-type="tv" onclick="event.stopPropagation();bookmarkCard(this)" src="${bookmarksrc}"></figure> \
                             <h3 class="card-title">${json.name}</h3> \
                             <div class="card-content"> \
                               <h3>Description</h3> \
@@ -1195,13 +1200,13 @@ async function tvshowAll(n, cb) {
               if (json.poster_path !== null) {
                 const newelement = document.createElement("li");
                 var bookmarksrc = "assets/bookmark.png";
-          if (localStorage.getItem('bookmarks')){
-            if (JSON.parse(localStorage.getItem('bookmarks')).find(tree => parseInt(tree.id) === parseInt(json.id))){
-            bookmarksrc = "assets/bookmarkfilled.png";
-            console.log('FOUND BOOOKMARK');
-            }  
-          }
-          newelement.innerHTML = `<figure class="card__thumbnail"><img id="bookmarkButton-2-${json.id}" onmouseenter="bookmarkCardHovered(this)" onmouseleave="bookmarkCardHovered(this)" data="bookmarkButton" data-id=${json.id} data-type="tv" onclick="event.stopPropagation();bookmarkCard(this)" src="${bookmarksrc}"></figure> \
+                if (localStorage.getItem('bookmarks')) {
+                  if (JSON.parse(localStorage.getItem('bookmarks')).find(tree => parseInt(tree.id) === parseInt(json.id))) {
+                    bookmarksrc = "assets/bookmarkfilled.png";
+                    console.log('FOUND BOOOKMARK');
+                  }
+                }
+                newelement.innerHTML = `<figure class="card__thumbnail"><img id="bookmarkButton-2-${json.id}" onmouseenter="bookmarkCardHovered(this)" onmouseleave="bookmarkCardHovered(this)" data="bookmarkButton" data-id=${json.id} data-type="tv" onclick="event.stopPropagation();bookmarkCard(this)" src="${bookmarksrc}"></figure> \
                             <h3 class="card-title">${json.name}</h3> \
                             <div class="card-content"> \
                               <h3>Description</h3> \
@@ -1234,13 +1239,13 @@ async function tvshowAll(n, cb) {
             for (var json of data.results) {
               const newelement = document.createElement("li");
               var bookmarksrc = "assets/bookmark.png";
-          if (localStorage.getItem('bookmarks')){
-            if (JSON.parse(localStorage.getItem('bookmarks')).find(tree => parseInt(tree.id) === parseInt(json.id))){
-            bookmarksrc = "assets/bookmarkfilled.png";
-            console.log('FOUND BOOOKMARK');
-            }  
-          }
-          newelement.innerHTML = `<figure class="card__thumbnail"><img id="bookmarkButton-3-${json.id}" onmouseenter="bookmarkCardHovered(this)" onmouseleave="bookmarkCardHovered(this)" data="bookmarkButton" data-id=${json.id} data-type="tv" onclick="event.stopPropagation();bookmarkCard(this)" src="${bookmarksrc}"></figure> \
+              if (localStorage.getItem('bookmarks')) {
+                if (JSON.parse(localStorage.getItem('bookmarks')).find(tree => parseInt(tree.id) === parseInt(json.id))) {
+                  bookmarksrc = "assets/bookmarkfilled.png";
+                  console.log('FOUND BOOOKMARK');
+                }
+              }
+              newelement.innerHTML = `<figure class="card__thumbnail"><img id="bookmarkButton-3-${json.id}" onmouseenter="bookmarkCardHovered(this)" onmouseleave="bookmarkCardHovered(this)" data="bookmarkButton" data-id=${json.id} data-type="tv" onclick="event.stopPropagation();bookmarkCard(this)" src="${bookmarksrc}"></figure> \
                             <h3 class="card-title">${json.name}</h3> \
                             <div class="card-content"> \
                               <h3>Description</h3> \
@@ -1282,11 +1287,11 @@ async function tvshowinitexample() {
         if (json.poster_path !== null) {
           const newelement = document.createElement("li");
           var bookmarksrc = "assets/bookmark.png";
-          if (localStorage.getItem('bookmarks')){
-            if (JSON.parse(localStorage.getItem('bookmarks')).find(tree => parseInt(tree.id) === parseInt(json.id))){
-            bookmarksrc = "assets/bookmarkfilled.png";
-            console.log('FOUND BOOOKMARK');
-            }  
+          if (localStorage.getItem('bookmarks')) {
+            if (JSON.parse(localStorage.getItem('bookmarks')).find(tree => parseInt(tree.id) === parseInt(json.id))) {
+              bookmarksrc = "assets/bookmarkfilled.png";
+              console.log('FOUND BOOOKMARK');
+            }
           }
           newelement.innerHTML = `<figure class="card__thumbnail"><img id="bookmarkButton-1-${json.id}" onmouseenter="bookmarkCardHovered(this)" onmouseleave="bookmarkCardHovered(this)" data="bookmarkButton" data-id=${json.id} data-type="tv" onclick="event.stopPropagation();bookmarkCard(this)" src="${bookmarksrc}"></figure> \
                 <h3 class="card-title">${json.name}</h3> \
@@ -1338,11 +1343,11 @@ async function tvshowinitexample() {
           }
           }*/
           var bookmarksrc = "assets/bookmark.png";
-          if (localStorage.getItem('bookmarks')){
-            if (JSON.parse(localStorage.getItem('bookmarks')).find(tree => parseInt(tree.id) === parseInt(json.id))){
-            bookmarksrc = "assets/bookmarkfilled.png";
-            console.log('FOUND BOOOKMARK');
-            }  
+          if (localStorage.getItem('bookmarks')) {
+            if (JSON.parse(localStorage.getItem('bookmarks')).find(tree => parseInt(tree.id) === parseInt(json.id))) {
+              bookmarksrc = "assets/bookmarkfilled.png";
+              console.log('FOUND BOOOKMARK');
+            }
           }
           newelement.innerHTML = `<figure class="card__thumbnail"><img id="bookmarkButton-2-${json.id}" onmouseenter="bookmarkCardHovered(this)" onmouseleave="bookmarkCardHovered(this)" data="bookmarkButton" data-id=${json.id} data-type="tv" onclick="event.stopPropagation();bookmarkCard(this)" src="${bookmarksrc}"></figure> \
                 <h3 class="card-title">${json.name}</h3> \
@@ -1384,13 +1389,13 @@ async function tvshowinitexample() {
         //console.log(json.poster_path);
         const newelement = document.createElement("li");
         var bookmarksrc = "assets/bookmark.png";
-          if (localStorage.getItem('bookmarks')){
-            if (JSON.parse(localStorage.getItem('bookmarks')).find(tree => parseInt(tree.id) === parseInt(json.id))){
+        if (localStorage.getItem('bookmarks')) {
+          if (JSON.parse(localStorage.getItem('bookmarks')).find(tree => parseInt(tree.id) === parseInt(json.id))) {
             bookmarksrc = "assets/bookmarkfilled.png";
             console.log('FOUND BOOOKMARK');
-            }  
           }
-          newelement.innerHTML = `<figure class="card__thumbnail"><img id="bookmarkButton-3-${json.id}" onmouseenter="bookmarkCardHovered(this)" onmouseleave="bookmarkCardHovered(this)" data="bookmarkButton" data-id=${json.id} data-type="tv" onclick="event.stopPropagation();bookmarkCard(this)" src="${bookmarksrc}"></figure> \
+        }
+        newelement.innerHTML = `<figure class="card__thumbnail"><img id="bookmarkButton-3-${json.id}" onmouseenter="bookmarkCardHovered(this)" onmouseleave="bookmarkCardHovered(this)" data="bookmarkButton" data-id=${json.id} data-type="tv" onclick="event.stopPropagation();bookmarkCard(this)" src="${bookmarksrc}"></figure> \
                 <h3 class="card-title">${json.name}</h3> \
                 <div class="card-content"> \
                   <h3>Description</h3> \
@@ -1529,11 +1534,11 @@ async function tvshowinitstonerexample() {
         if (json.poster_path !== null) {
           const newelement = document.createElement("li");
           var bookmarksrc = "assets/bookmark.png";
-          if (localStorage.getItem('bookmarks')){
-            if (JSON.parse(localStorage.getItem('bookmarks')).find(tree => parseInt(tree.id) === parseInt(json.id))){
-            bookmarksrc = "assets/bookmarkfilled.png";
-            console.log('FOUND BOOOKMARK');
-            }  
+          if (localStorage.getItem('bookmarks')) {
+            if (JSON.parse(localStorage.getItem('bookmarks')).find(tree => parseInt(tree.id) === parseInt(json.id))) {
+              bookmarksrc = "assets/bookmarkfilled.png";
+              console.log('FOUND BOOOKMARK');
+            }
           }
           newelement.innerHTML = `<figure class="card__thumbnail"><img id="bookmarkButton-4-${json.id}" onmouseenter="bookmarkCardHovered(this)" onmouseleave="bookmarkCardHovered(this)" data="bookmarkButton" data-id=${json.id} data-type="tv" onclick="event.stopPropagation();bookmarkCard(this)" src="${bookmarksrc}"></figure> \
                 <h3 class="card-title">${json.name}</h3> \
@@ -1575,11 +1580,11 @@ async function tvshowinitstonerexample() {
         if (json.poster_path !== null) {
           const newelement = document.createElement("li");
           var bookmarksrc = "assets/bookmark.png";
-          if (localStorage.getItem('bookmarks')){
-            if (JSON.parse(localStorage.getItem('bookmarks')).find(tree => parseInt(tree.id) === parseInt(json.id))){
-            bookmarksrc = "assets/bookmarkfilled.png";
-            console.log('FOUND BOOOKMARK');
-            }  
+          if (localStorage.getItem('bookmarks')) {
+            if (JSON.parse(localStorage.getItem('bookmarks')).find(tree => parseInt(tree.id) === parseInt(json.id))) {
+              bookmarksrc = "assets/bookmarkfilled.png";
+              console.log('FOUND BOOOKMARK');
+            }
           }
           newelement.innerHTML = `<figure class="card__thumbnail"><img id="bookmarkButton-5-${json.id}" onmouseenter="bookmarkCardHovered(this)" onmouseleave="bookmarkCardHovered(this)" data="bookmarkButton" data-id=${json.id} data-type="tv" onclick="event.stopPropagation();bookmarkCard(this)" src="${bookmarksrc}"></figure> \
                 <h3 class="card-title">${json.name}</h3> \
