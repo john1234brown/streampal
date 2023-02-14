@@ -61,7 +61,8 @@ window.onload = function() {
     // code here to block/unblock access ... a method like the one in user1646111's post can be good.
     }
   }*/
-  movieinitstonerexample()
+  movieinitexample();
+  movieinitstonerexample();
   tvshowinitstonerexample();
   tvshowinitexample();
   bookmarkInit();
@@ -1128,6 +1129,7 @@ async function initializeaddbypage(n, t_p) {
 
 }
 
+//Show all Button Handler!
 async function tvshowAll(n, cb) {
   var total_pages = 1;
   //First we clear the already existing list! then we add to it!
@@ -1324,7 +1326,139 @@ async function tvshowAll(n, cb) {
 }
 
 async function movieinitexample(){
+  fetch('https://api.themoviedb.org/3/discover/movie?language=en-US&sort_by=popularity.desc&page=1&with_original_language=en&vote_count.gte=10000&vote_average.gte=7&watch_region=US&region=US', {
+    method: 'GET',
+    headers: {
+      'authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkYTljY2JkNDViNmY1MTJjN2E0YWZmMzA5MjIxZDgyOCIsInN1YiI6IjYzZDBhM2M3NjZhZTRkMDA5ZTlkZjY4MSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.N5j1M7YnwmMTjIWMdYQbdh5suW2hCDucbqlDgMku_UA',
+      'content-type': 'application/json;charset=utf-8'
+    }
+  }).then((response) => response.json())
+    .then((data) => {
+      //console.log(data);
+      for (var json of data.results) {
 
+        if (json.poster_path === null && json.backdrop_path === null) {
+
+        }
+        if (json.poster_path !== null) {
+          const newelement = document.createElement("li");
+          var bookmarksrc = "assets/bookmark.png";
+          if (localStorage.getItem('bookmarks')) {
+            if (JSON.parse(localStorage.getItem('bookmarks')).find(tree => parseInt(tree.id) === parseInt(json.id))) {
+              bookmarksrc = "assets/bookmarkfilled.png";
+              console.log('FOUND BOOOKMARK');
+            }
+          }
+          newelement.innerHTML = `<figure class="card__thumbnail"><img id="bookmarkButton-1-${json.id}" onmouseenter="bookmarkCardHovered(this)" onmouseleave="bookmarkCardHovered(this)" data="bookmarkButton" data-id=${json.id} data-type="movie" onclick="event.stopPropagation();bookmarkCard(this)" src="${bookmarksrc}"></figure> \
+                <h3 class="card-title">${json.title}</h3> \
+                <div class="card-content"> \
+                  <h3>Description</h3> \
+                  <p>${json.overview.substring(0, 200)}</p> \
+                </div> \
+                <div class="card-link-wrapper"> \
+                  <p class="card-link">${json.release_date.split("-")[0]}</p> \
+                </div>`
+          newelement.setAttribute("style", `background:url('https://image.tmdb.org/t/p/original${json.poster_path}'); background-repeat: no-repeat; background-size: cover; background-position: center;`);
+          newelement.setAttribute("id", json.id);
+          newelement.setAttribute("class", "card");
+          newelement.setAttribute("onclick", `cardclicked(${json.id}, "${json.title}", "movie");`);
+          document.getElementById("IMDBTopmovielist").appendChild(newelement);
+        }
+      }
+    }).catch(e => {
+      console.log(e);
+    });
+
+
+  fetch('https://api.themoviedb.org/3/movie/now_playing', {
+    method: 'GET',
+    headers: {
+      'authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkYTljY2JkNDViNmY1MTJjN2E0YWZmMzA5MjIxZDgyOCIsInN1YiI6IjYzZDBhM2M3NjZhZTRkMDA5ZTlkZjY4MSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.N5j1M7YnwmMTjIWMdYQbdh5suW2hCDucbqlDgMku_UA',
+      'content-type': 'application/json;charset=utf-8'
+    }
+  }).then((response) => response.json())
+    .then((data) => {
+      //console.log(data);
+      for (var json of data.results) {
+        //console.log(json.id);
+        //console.log(json.poster_path);
+        //console.log(json.backdrop_path);
+        if (json.poster_path === null && json.backdrop_path === null) {
+
+        }
+        if (json.poster_path !== null) {
+          const newelement = document.createElement("li");
+          var bookmarksrc = "assets/bookmark.png";
+          if (localStorage.getItem('bookmarks')) {
+            if (JSON.parse(localStorage.getItem('bookmarks')).find(tree => parseInt(tree.id) === parseInt(json.id))) {
+              bookmarksrc = "assets/bookmarkfilled.png";
+              console.log('FOUND BOOOKMARK');
+            }
+          }
+          newelement.innerHTML = `<figure class="card__thumbnail"><img id="bookmarkButton-2-${json.id}" onmouseenter="bookmarkCardHovered(this)" onmouseleave="bookmarkCardHovered(this)" data="bookmarkButton" data-id=${json.id} data-type="movie" onclick="event.stopPropagation();bookmarkCard(this)" src="${bookmarksrc}"></figure> \
+                <h3 class="card-title">${json.title}</h3> \
+                <div class="card-content"> \
+                  <h3>Description</h3> \
+                  <p>${json.overview.substring(0, 200)}</p> \
+                </div> \
+                <div class="card-link-wrapper"> \
+                  <p class="card-link">${json.release_date.split("-")[0]}</p> \
+                </div>`
+          newelement.setAttribute("style", `background:url('https://image.tmdb.org/t/p/original${json.poster_path}'); background-repeat: no-repeat; background-size: cover; background-position: center;`);
+          newelement.setAttribute("id", json.id);
+          //newelement.setAttribute("data-type", "movie");
+          //newelement.setAttribute("data-name", json.title);
+          //newelement.setAttribute("data-id", json.id);
+          newelement.setAttribute("class", "card");
+          newelement.setAttribute("onclick", `cardclicked(${json.id}, "${json.title}", "movie");`);
+          document.getElementById("newestmovielist").appendChild(newelement);
+
+          //document.getElementById(`${json.id}`).addEventListener("click", cardclicked(`${json.id}`));
+          //console.log(JSON.stringify(json));
+        }
+      }
+    }).catch(e => {
+      console.log(e);
+    });
+
+  fetch('https://api.themoviedb.org/3/movie/popular?language=en-US&sort_by=popularity.asc&page=1&with_original_language=en', {
+    method: 'GET',
+    headers: {
+      'authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkYTljY2JkNDViNmY1MTJjN2E0YWZmMzA5MjIxZDgyOCIsInN1YiI6IjYzZDBhM2M3NjZhZTRkMDA5ZTlkZjY4MSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.N5j1M7YnwmMTjIWMdYQbdh5suW2hCDucbqlDgMku_UA',
+      'content-type': 'application/json;charset=utf-8'
+    }
+  }).then((response) => response.json())
+    .then((data) => {
+      //console.log(data);
+      for (var json of data.results) {
+        //console.log(json.id);
+        //console.log(json.poster_path);
+        const newelement = document.createElement("li");
+        var bookmarksrc = "assets/bookmark.png";
+        if (localStorage.getItem('bookmarks')) {
+          if (JSON.parse(localStorage.getItem('bookmarks')).find(tree => parseInt(tree.id) === parseInt(json.id))) {
+            bookmarksrc = "assets/bookmarkfilled.png";
+            console.log('FOUND BOOOKMARK');
+          }
+        }
+        newelement.innerHTML = `<figure class="card__thumbnail"><img id="bookmarkButton-3-${json.id}" onmouseenter="bookmarkCardHovered(this)" onmouseleave="bookmarkCardHovered(this)" data="bookmarkButton" data-id=${json.id} data-type="movie" onclick="event.stopPropagation();bookmarkCard(this)" src="${bookmarksrc}"></figure> \
+                <h3 class="card-title">${json.title}</h3> \
+                <div class="card-content"> \
+                  <h3>Description</h3> \
+                  <p>${json.overview.substring(0, 200)}</p> \
+                </div> \
+                <div class="card-link-wrapper"> \
+                  <p class="card-link">${json.release_date.split("-")[0]}</p> \
+                </div>`
+        newelement.setAttribute("style", `background:url('https://image.tmdb.org/t/p/original${json.poster_path}'); background-repeat: no-repeat; background-size: cover; background-position: center;`);
+        newelement.setAttribute("id", json.id);
+        newelement.setAttribute("class", "card");
+        newelement.setAttribute("onclick", `cardclicked(${json.id}, "${json.title}", "movie");`);
+        document.getElementById("popularmovielist").appendChild(newelement);
+      }
+    }).catch(e => {
+      console.log(e);
+    });
   
 }
 
