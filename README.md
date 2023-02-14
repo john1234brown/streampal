@@ -1,5 +1,5 @@
 # Streampal
-Free Streaming Website called StreamPal which doesnt host any files directly on its site.
+Free Streaming Website Search Engine called StreamPal which doesnt host any files directly on its site.
 
 # Current Features
 - Bookmarks
