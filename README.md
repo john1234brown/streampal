@@ -12,6 +12,7 @@ Free Streaming Search Engine Website called StreamPal which doesnt host any file
 - Tv Section is complete! besides the genre section
 - Search Bar is fully functionable and Complete! so you can search any movie that is in the TMDB.
 - Server Selector on the watch page along with episode and season selector for tv shows!
+- Movie Section is complete! beside the genre sections
 
 # Coming Soon Features
 - Watch Later List aka Watch List incase you dont want to bookmark but might want to peep somethings out without cluttering your bookmarks!
