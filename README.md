@@ -28,8 +28,12 @@ Free Streaming Website called StreamPal which doesnt host any files directly on 
 - We wish to decentralize video streaming of movies and tv shows along with making it as mobile friendly as netflix or plutotv or tubi but instead of using a app you can do it straight through the browser
 - We hope to be able to cut down loads of ads by sandboxing the embedded video players but sadly some servers detect sandbox so for those servers we recommend using the Brave browser
 - We hope you enjoy our site and as always we wish to remain as legal as possible which is why we dont directly host any content which is listed on our website so we don't break any copyright infringment.
-- Along with the fact the site is nothing more then a video search engine for movies and tv shows amongst publicly known servers using custom search algorithms
 
 
 # Disclaimer
 - All Files and Content/Videos/Pictures displayed on the site is not directly hosted by or associated with StreamPal in any means or anyway so please be sure to reach out to each Individual File Providers for our services if you have any issues with a File or Content/Video/Picture that they may have posted!
+- This site is nothing more then a search engine as such just like any other search engines out there.
+- StreamPal and I the sole creator of it am not legally liable for any copyrighted materials of content that it may find and display on the site so therefore neither StreamPal or Github is responsible for any of the material displayed on the https://john1234brown.github.io/streampal Website!
+- If you have any issues with material that may be displayed please find out what server the content is displayed on and properly serve proper DMCA notices to those servers we do not host any files on any of our servers or githubs servers as that would be breaking tos agreement with Github!
+- We do not and will not create any kind of censorship on our site or our search engine if there is a file available from a server it will display it if you have issues again please reach out to those servers we do not Condone or Advise the publishing of Copyrighted Material!
+- Although we advise how to publish and where to publish we trust the users will properly post legal content that does not infringe on any Copyright Protections.
