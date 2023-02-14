@@ -1,4 +1,4 @@
-# streampal
+# Streampal
 Free Streaming Website called StreamPal which doesnt host any files directly on its site.
 
 # Current Features
