@@ -28,7 +28,7 @@ Free Streaming Website called StreamPal which doesnt host any files directly on 
 - We wish to decentralize video streaming of movies and tv shows along with making it as mobile friendly as netflix or plutotv or tubi but instead of using a app you can do it straight through the browser
 - We hope to be able to cut down loads of ads by sandboxing the embedded video players but sadly some servers detect sandbox so for those servers we recommend using the Brave browser
 - We hope you enjoy our site and as always we wish to remain as legal as possible which is why we dont directly host any content which is listed on our website so we don't break any copyright infringment.
-
+- Along with the fact the site is nothing more then a video search engine for movies and tv shows amongst publicly known servers using custom search algorithms
 
 
 # Disclaimer
