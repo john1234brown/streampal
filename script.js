@@ -1,5 +1,6 @@
 let Autohide = false;
 var server = 1;
+const TodaysDate = new Date();
 const timer = ms => new Promise(res => setTimeout(res, ms));
 var imdbId;
 var namee;
@@ -14,19 +15,13 @@ var AdServersInfo = {
 var Bookmarks = [];
 var BookmarksJson;
 
-window.open = function(text) { console.log('tried to Open: '+text); return true; };
+window.open = function(text) { console.log('tried to Open: ' + text); return true; };
 
 //Override Existing Window.alert function to combat popups and alerts!
 window.alert = function(text) { console.log('tried to alert: ' + text); return true; };
 
-window.onload = function () {
-  var script = document.createElement('script');
-  script.src = '//localhost/your/script';
-  script.onload = function() {
-    console.log('your script have been loaded');
-  }
-  document.body.appendChild(script);
-}
+//Window built in ads blocked!!
+onbeforeunload = (event) => { event.preventDefault; console.log("prevented redirect!") };
 
 //Register events in the onload to ensure elements are loaded!
 window.onload = function() {
@@ -67,6 +62,7 @@ window.onload = function() {
   tvshowinitexample();
   bookmarkInit();
   bookmarkUpdate();
+
   if (document.cookie.split('; ').find((row) => row.startsWith('name='))?.split('=')[1]) {
     namee = document.cookie.split('; ').find((row) => row.startsWith('name='))?.split('=')[1];
   }
@@ -86,6 +82,46 @@ window.onload = function() {
       }
     }
   }
+  /*var iframes = document.querySelectorAll('iframe');
+  [].forEach.call(iframes, function(iframe) {
+    // do whatever
+    iframe.contentWindow.onload = function() {
+      console.log('iframe is completely loaded');
+      iframe.contentWindow.alert = function(text) { console.log('tried to alert: ' + text); return true; };
+      iframe.contentWindow.open = function(text) { console.log('tried to Open: ' + text); return true; };
+    }
+    //div.style.color = "red";
+  });*/
+  /* const iframe = document.querySelector('watchMoviePlayer');
+   console.log(iframe);
+   iframe.onload = function() {
+     console.log('iframe is completely loaded');
+     iframe.contentWindow.alert = function(text) { console.log('tried to alert: ' + text); return true; };
+     iframe.contentWindow.open = function(text) { console.log('tried to Open: ' + text); return true; };
+     iframe.contentWindow.onload = function() {
+       var script = document.createElement('script');
+       script.src = 'https://john1234brown.github.io/streampal/adblocker.js';
+       script.onload = function() {
+         console.log('your script have been loaded');
+       }
+       document.body.appendChild(script);
+     }
+   }
+   const iframe2 = document.querySelector('watchTvPlayer');
+   console.log(iframe2);
+   iframe2.onload = function() {
+     console.log('iframe is completely loaded');
+     iframe2.contentWindow.alert = function(text) { console.log('tried to alert: ' + text); return true; };
+     iframe2.contentWindow.open = function(text) { console.log('tried to Open: ' + text); return true; };
+     iframe2.contentWindow.onload = function() {
+       var script = document.createElement('script');
+       script.src = 'https://john1234brown.github.io/streampal/adblocker.js';
+       script.onload = function() {
+         console.log('your script have been loaded');
+       }
+       iframe2.contentDocument.body.appendChild(script);
+     }
+   }*/
 }
 //updateTvContainer();
 
@@ -177,9 +213,9 @@ function bookmarkUpdate() {
               } else {
                 overview = "";
               }
-              if (json.first_air_date){
-              const newelement = document.createElement("li");
-              newelement.innerHTML = `<figure class="card__thumbnail"></figure> \
+              if (json.first_air_date) {
+                const newelement = document.createElement("li");
+                newelement.innerHTML = `<figure class="card__thumbnail"></figure> \
                     <h3 class="card-title">${json.name}</h3> \
                     <div class="card-content"> \
                       <h3>Description</h3> \
@@ -188,11 +224,11 @@ function bookmarkUpdate() {
                     <div class="card-link-wrapper"> \
                       <p class="card-link">${json.first_air_date.split("-")[0]}</p> \
                     </div>`
-              newelement.setAttribute("style", `background:url('https://image.tmdb.org/t/p/original${json.poster_path}'); background-repeat: no-repeat; background-size: cover; background-position: center;`);
-              newelement.setAttribute("id", json.id);
-              newelement.setAttribute("class", "card");
-              newelement.setAttribute("onclick", `cardclicked(${json.id}, "${json.name}", "tv");`);
-              document.getElementById("bookmarklist").appendChild(newelement);
+                newelement.setAttribute("style", `background:url('https://image.tmdb.org/t/p/original${json.poster_path}'); background-repeat: no-repeat; background-size: cover; background-position: center;`);
+                newelement.setAttribute("id", json.id);
+                newelement.setAttribute("class", "card");
+                newelement.setAttribute("onclick", `cardclicked(${json.id}, "${json.name}", "tv");`);
+                document.getElementById("bookmarklist").appendChild(newelement);
               }
             }).catch(e => {
               console.log(e);
@@ -229,9 +265,6 @@ function bookmarkCard(OGObj) {
         document.getElementById(OGObj.id).setAttribute('src', 'assets/bookmark.png');
         bookmarksJson2.push(obj);
       }
-      /*var book = {
-          "bookmarks": JSON.stringify(Bo)
-      }*/
       localStorage.setItem('bookmarks', JSON.stringify(bookmarksJson2));
       bookmarkUpdate();
       return;
@@ -247,9 +280,6 @@ function bookmarkCard(OGObj) {
       }
       Bookmarks.push(obj);
       document.getElementById(OGObj.id).setAttribute('src', 'assets/bookmarkfilled.png');
-      /*var book = {
-          "bookmarks": JSON.stringify(Bookmarks)
-      }*/
       localStorage.setItem('bookmarks', JSON.stringify(Bookmarks));
       bookmarkUpdate();
       return;
@@ -1069,29 +1099,31 @@ async function tvaddbyPage(n, p) {
         });
       break;
 
-    case 420:
-      fetch(`https://api.themoviedb.org/3/discover/movie?language=en-US&sort_by=popularity.desc&page=${(p+1)}&include_null_first_air_dates=false&with_keywords=302399%7C54169%7C10776%7C171235%7C241040%7C8224%7C258212%7C195631%7C243617%7C171401%7C195632%7C245911`, {
-    method: 'GET',
-    headers: {
-      'authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkYTljY2JkNDViNmY1MTJjN2E0YWZmMzA5MjIxZDgyOCIsInN1YiI6IjYzZDBhM2M3NjZhZTRkMDA5ZTlkZjY4MSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.N5j1M7YnwmMTjIWMdYQbdh5suW2hCDucbqlDgMku_UA',
-      'content-type': 'application/json;charset=utf-8'
-    }
-  }).then((response) => response.json())
-    .then((data) => {
-      //console.log(data);
-      for (var json of data.results) {
-        if (json.poster_path === null && json.backdrop_path === null) {
+    case 20:
+      fetch(`https://api.themoviedb.org/3/discover/movie?language=en-US&sort_by=popularity.desc&page=${(p + 1)}&with_original_language=en&vote_count.gte=10000&vote_average.gte=7&watch_region=US&region=US`, {
+        method: 'GET',
+        headers: {
+          'authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkYTljY2JkNDViNmY1MTJjN2E0YWZmMzA5MjIxZDgyOCIsInN1YiI6IjYzZDBhM2M3NjZhZTRkMDA5ZTlkZjY4MSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.N5j1M7YnwmMTjIWMdYQbdh5suW2hCDucbqlDgMku_UA',
+          'content-type': 'application/json;charset=utf-8'
         }
-        if (json.poster_path !== null) {
-          const newelement = document.createElement("li");
-          var bookmarksrc = "assets/bookmark.png";
-          if (localStorage.getItem('bookmarks')) {
-            if (JSON.parse(localStorage.getItem('bookmarks')).find(tree => parseInt(tree.id) === parseInt(json.id))) {
-              bookmarksrc = "assets/bookmarkfilled.png";
-              console.log('FOUND BOOOKMARK');
+      }).then((response) => response.json())
+        .then((data) => {
+          //console.log(data);
+          for (var json of data.results) {
+
+            if (json.poster_path === null && json.backdrop_path === null) {
+
             }
-          }
-          newelement.innerHTML = `<figure class="card__thumbnail"><img id="bookmarkButton-4-${json.id}" onmouseenter="bookmarkCardHovered(this)" onmouseleave="bookmarkCardHovered(this)" data="bookmarkButton" data-id=${json.id} data-type="tv" onclick="event.stopPropagation();bookmarkCard(this)" src="${bookmarksrc}"></figure> \
+            if (json.poster_path !== null) {
+              const newelement = document.createElement("li");
+              var bookmarksrc = "assets/bookmark.png";
+              if (localStorage.getItem('bookmarks')) {
+                if (JSON.parse(localStorage.getItem('bookmarks')).find(tree => parseInt(tree.id) === parseInt(json.id))) {
+                  bookmarksrc = "assets/bookmarkfilled.png";
+                  console.log('FOUND BOOOKMARK');
+                }
+              }
+              newelement.innerHTML = `<figure class="card__thumbnail"><img id="bookmarkButton-1-${json.id}" onmouseenter="bookmarkCardHovered(this)" onmouseleave="bookmarkCardHovered(this)" data="bookmarkButton" data-id=${json.id} data-type="movie" onclick="event.stopPropagation();bookmarkCard(this)" src="${bookmarksrc}"></figure> \
                 <h3 class="card-title">${json.title}</h3> \
                 <div class="card-content"> \
                   <h3>Description</h3> \
@@ -1100,33 +1132,185 @@ async function tvaddbyPage(n, p) {
                 <div class="card-link-wrapper"> \
                   <p class="card-link">${json.release_date.split("-")[0]}</p> \
                 </div>`
-          newelement.setAttribute("style", `background:url('https://image.tmdb.org/t/p/original${json.poster_path}'); background-repeat: no-repeat; background-size: cover; background-position: center;`);
-          newelement.setAttribute("id", json.id);
-          newelement.setAttribute("class", "card");
-          newelement.setAttribute("onclick", `cardclicked(${json.id}, "${json.title}", "movie");`);
-          document.getElementById("stonermovielist").appendChild(newelement);
+              newelement.setAttribute("style", `background:url('https://image.tmdb.org/t/p/original${json.poster_path}'); background-repeat: no-repeat; background-size: cover; background-position: center;`);
+              newelement.setAttribute("id", json.id);
+              newelement.setAttribute("class", "card");
+              newelement.setAttribute("onclick", `cardclicked(${json.id}, "${json.title}", "movie");`);
+              document.getElementById("IMDBTopmovielist").appendChild(newelement);
+            }
+          }
+        }).catch(e => {
+          console.log(e);
+        });
+      break;
+
+    case 21:
+      fetch(`https://api.themoviedb.org/3/movie/popular?language=en-US&sort_by=popularity.asc&page=${(p + 1)}&with_original_language=en`, {
+        method: 'GET',
+        headers: {
+          'authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkYTljY2JkNDViNmY1MTJjN2E0YWZmMzA5MjIxZDgyOCIsInN1YiI6IjYzZDBhM2M3NjZhZTRkMDA5ZTlkZjY4MSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.N5j1M7YnwmMTjIWMdYQbdh5suW2hCDucbqlDgMku_UA',
+          'content-type': 'application/json;charset=utf-8'
         }
-      }
-    }).catch(e => {
-      console.log(e);
-    });
-    break;
+      }).then((response) => response.json())
+        .then((data) => {
+          //console.log(data);
+          for (var json of data.results) {
+            //console.log(json.id);
+            //console.log(json.poster_path);
+            const newelement = document.createElement("li");
+            var bookmarksrc = "assets/bookmark.png";
+            if (localStorage.getItem('bookmarks')) {
+              if (JSON.parse(localStorage.getItem('bookmarks')).find(tree => parseInt(tree.id) === parseInt(json.id))) {
+                bookmarksrc = "assets/bookmarkfilled.png";
+                console.log('FOUND BOOOKMARK');
+              }
+            }
+            newelement.innerHTML = `<figure class="card__thumbnail"><img id="bookmarkButton-3-${json.id}" onmouseenter="bookmarkCardHovered(this)" onmouseleave="bookmarkCardHovered(this)" data="bookmarkButton" data-id=${json.id} data-type="movie" onclick="event.stopPropagation();bookmarkCard(this)" src="${bookmarksrc}"></figure> \
+                <h3 class="card-title">${json.title}</h3> \
+                <div class="card-content"> \
+                  <h3>Description</h3> \
+                  <p>${json.overview.substring(0, 200)}</p> \
+                </div> \
+                <div class="card-link-wrapper"> \
+                  <p class="card-link">${json.release_date.split("-")[0]}</p> \
+                </div>`
+            newelement.setAttribute("style", `background:url('https://image.tmdb.org/t/p/original${json.poster_path}'); background-repeat: no-repeat; background-size: cover; background-position: center;`);
+            newelement.setAttribute("id", json.id);
+            newelement.setAttribute("class", "card");
+            newelement.setAttribute("onclick", `cardclicked(${json.id}, "${json.title}", "movie");`);
+            document.getElementById("popularmovielist").appendChild(newelement);
+          }
+        }).catch(e => {
+          console.log(e);
+        });
+      break;
+
+    case 22:
+      fetch(`https://api.themoviedb.org/3/discover/movie?language=en-US&region=US%7CUK&sort_by=release_date.desc&page=${(p + 1)}&primary_release_year=2023%7C2022&watch_region=US%7CUK&with_original_language=en&with_release_type=3&primary_release_date.lte=${TodaysDate.toISOString().split("T")[0]}`, {
+        method: 'GET',
+        headers: {
+          'authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkYTljY2JkNDViNmY1MTJjN2E0YWZmMzA5MjIxZDgyOCIsInN1YiI6IjYzZDBhM2M3NjZhZTRkMDA5ZTlkZjY4MSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.N5j1M7YnwmMTjIWMdYQbdh5suW2hCDucbqlDgMku_UA',
+          'content-type': 'application/json;charset=utf-8'
+        }
+      }).then((response) => response.json())
+        .then((data) => {
+          //console.log(data);
+          for (var json of data.results) {
+            //console.log(json.id);
+            //console.log(json.poster_path);
+            //console.log(json.backdrop_path);
+            if (json.poster_path === null && json.backdrop_path === null) {
+
+            }
+            if (json.poster_path !== null) {
+              const newelement = document.createElement("li");
+              var bookmarksrc = "assets/bookmark.png";
+              if (localStorage.getItem('bookmarks')) {
+                if (JSON.parse(localStorage.getItem('bookmarks')).find(tree => parseInt(tree.id) === parseInt(json.id))) {
+                  bookmarksrc = "assets/bookmarkfilled.png";
+                  console.log('FOUND BOOOKMARK');
+                }
+              }
+              newelement.innerHTML = `<figure class="card__thumbnail"><img id="bookmarkButton-2-${json.id}" onmouseenter="bookmarkCardHovered(this)" onmouseleave="bookmarkCardHovered(this)" data="bookmarkButton" data-id=${json.id} data-type="movie" onclick="event.stopPropagation();bookmarkCard(this)" src="${bookmarksrc}"></figure> \
+                <h3 class="card-title">${json.title}</h3> \
+                <div class="card-content"> \
+                  <h3>Description</h3> \
+                  <p>${json.overview.substring(0, 200)}</p> \
+                </div> \
+                <div class="card-link-wrapper"> \
+                  <p class="card-link">${json.release_date.split("-")[0]}</p> \
+                </div>`
+              newelement.setAttribute("style", `background:url('https://image.tmdb.org/t/p/original${json.poster_path}'); background-repeat: no-repeat; background-size: cover; background-position: center;`);
+              newelement.setAttribute("id", json.id);
+              //newelement.setAttribute("data-type", "movie");
+              //newelement.setAttribute("data-name", json.title);
+              //newelement.setAttribute("data-id", json.id);
+              newelement.setAttribute("class", "card");
+              newelement.setAttribute("onclick", `cardclicked(${json.id}, "${json.title}", "movie");`);
+              document.getElementById("newestmovielist").appendChild(newelement);
+
+              //document.getElementById(`${json.id}`).addEventListener("click", cardclicked(`${json.id}`));
+              //console.log(JSON.stringify(json));
+            }
+          }
+        }).catch(e => {
+          console.log(e);
+        });
+      break;
+
+    case 420:
+      fetch(`https://api.themoviedb.org/3/discover/movie?language=en-US&sort_by=popularity.desc&page=${(p + 1)}&include_null_first_air_dates=false&with_keywords=302399%7C54169%7C10776%7C171235%7C241040%7C8224%7C258212%7C195631%7C243617%7C171401%7C195632%7C245911`, {
+        method: 'GET',
+        headers: {
+          'authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkYTljY2JkNDViNmY1MTJjN2E0YWZmMzA5MjIxZDgyOCIsInN1YiI6IjYzZDBhM2M3NjZhZTRkMDA5ZTlkZjY4MSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.N5j1M7YnwmMTjIWMdYQbdh5suW2hCDucbqlDgMku_UA',
+          'content-type': 'application/json;charset=utf-8'
+        }
+      }).then((response) => response.json())
+        .then((data) => {
+          //console.log(data);
+          for (var json of data.results) {
+            if (json.poster_path === null && json.backdrop_path === null) {
+            }
+            if (json.poster_path !== null) {
+              const newelement = document.createElement("li");
+              var bookmarksrc = "assets/bookmark.png";
+              if (localStorage.getItem('bookmarks')) {
+                if (JSON.parse(localStorage.getItem('bookmarks')).find(tree => parseInt(tree.id) === parseInt(json.id))) {
+                  bookmarksrc = "assets/bookmarkfilled.png";
+                  console.log('FOUND BOOOKMARK');
+                }
+              }
+              newelement.innerHTML = `<figure class="card__thumbnail"><img id="bookmarkButton-4-${json.id}" onmouseenter="bookmarkCardHovered(this)" onmouseleave="bookmarkCardHovered(this)" data="bookmarkButton" data-id=${json.id} data-type="tv" onclick="event.stopPropagation();bookmarkCard(this)" src="${bookmarksrc}"></figure> \
+                <h3 class="card-title">${json.title}</h3> \
+                <div class="card-content"> \
+                  <h3>Description</h3> \
+                  <p>${json.overview.substring(0, 200)}</p> \
+                </div> \
+                <div class="card-link-wrapper"> \
+                  <p class="card-link">${json.release_date.split("-")[0]}</p> \
+                </div>`
+              newelement.setAttribute("style", `background:url('https://image.tmdb.org/t/p/original${json.poster_path}'); background-repeat: no-repeat; background-size: cover; background-position: center;`);
+              newelement.setAttribute("id", json.id);
+              newelement.setAttribute("class", "card");
+              newelement.setAttribute("onclick", `cardclicked(${json.id}, "${json.title}", "movie");`);
+              document.getElementById("stonermovielist").appendChild(newelement);
+            }
+          }
+        }).catch(e => {
+          console.log(e);
+        });
+      break;
   }
 }
 
 async function initializeaddbypage(n, t_p) {
   for (var p = 0; t_p > p; p++) {
     if (p < 50) {
-      console.log(p);
+      //console.log(p);
+      tvaddbyPage(n, p);
+      await timer(100);
+    }
+    if (p >= 51) {
+      break;
+    }
+    //console.log(p);
+  }
+  return;
+}
+
+async function initializeaddbypagestoner(n, t_p) {
+  for (var p = 0; t_p > p; p++) {
+    if (p < 100) {
+      //console.log(p);
       tvaddbyPage(n, p);
       await timer(100);
     }
     if (p >= 101) {
-      return;
+      break;
     }
     //console.log(p);
   }
-
+  return;
 }
 
 //Show all Button Handler!
@@ -1189,6 +1373,63 @@ async function tvshowAll(n, cb) {
             initializeaddbypage(3, total_pages);
           }
           //console.log(total_pages);
+          //console.log(data);
+        }).catch(e => {
+          console.log(e);
+        });
+      break;
+    case 20:
+      document.getElementById("IMDBTopmovielist").innerHTML = "";
+      fetch('https://api.themoviedb.org/3/discover/movie?language=en-US&sort_by=popularity.desc&page=1&with_original_language=en&vote_count.gte=10000&vote_average.gte=7&watch_region=US&region=US', {
+        method: 'GET',
+        headers: {
+          'authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkYTljY2JkNDViNmY1MTJjN2E0YWZmMzA5MjIxZDgyOCIsInN1YiI6IjYzZDBhM2M3NjZhZTRkMDA5ZTlkZjY4MSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.N5j1M7YnwmMTjIWMdYQbdh5suW2hCDucbqlDgMku_UA',
+          'content-type': 'application/json;charset=utf-8'
+        }
+      }).then((response) => response.json())
+        .then((data) => {
+          total_pages = parseInt(data.total_pages);
+          if (cb.checked) {
+            initializeaddbypage(20, total_pages);
+          }
+          //console.log(data);
+        }).catch(e => {
+          console.log(e);
+        });
+      break;
+    case 21:
+      fetch('https://api.themoviedb.org/3/movie/popular?language=en-US&sort_by=popularity.asc&page=1&with_original_language=en', {
+        method: 'GET',
+        headers: {
+          'authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkYTljY2JkNDViNmY1MTJjN2E0YWZmMzA5MjIxZDgyOCIsInN1YiI6IjYzZDBhM2M3NjZhZTRkMDA5ZTlkZjY4MSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.N5j1M7YnwmMTjIWMdYQbdh5suW2hCDucbqlDgMku_UA',
+          'content-type': 'application/json;charset=utf-8'
+        }
+      }).then((response) => response.json())
+        .then((data) => {
+          total_pages = parseInt(data.total_pages);
+          if (cb.checked) {
+            initializeaddbypage(21, total_pages);
+          }
+          //console.log(data);
+
+        }).catch(e => {
+          console.log(e);
+        });
+      break;
+    case 22:
+      document.getElementById("newestmovielist").innerHTML = "";
+      fetch(`https://api.themoviedb.org/3/discover/movie?language=en-US&region=US%7CUK&sort_by=release_date.desc&page=1&primary_release_year=2023%7C2022&watch_region=US%7CUK&with_original_language=en&with_release_type=3&primary_release_date.lte=${TodaysDate.toISOString().split("T")[0]}`, {
+        method: 'GET',
+        headers: {
+          'authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkYTljY2JkNDViNmY1MTJjN2E0YWZmMzA5MjIxZDgyOCIsInN1YiI6IjYzZDBhM2M3NjZhZTRkMDA5ZTlkZjY4MSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.N5j1M7YnwmMTjIWMdYQbdh5suW2hCDucbqlDgMku_UA',
+          'content-type': 'application/json;charset=utf-8'
+        }
+      }).then((response) => response.json())
+        .then((data) => {
+          total_pages = parseInt(data.total_pages);
+          if (cb.checked) {
+            initializeaddbypage(22, total_pages);
+          }
           //console.log(data);
         }).catch(e => {
           console.log(e);
@@ -1321,11 +1562,149 @@ async function tvshowAll(n, cb) {
             console.log(e);
           });
         break;
+
+      case 20:
+        document.getElementById("IMDBTopmovielist").innerHTML = "";
+        fetch('https://api.themoviedb.org/3/discover/movie?language=en-US&sort_by=popularity.desc&page=1&with_original_language=en&vote_count.gte=10000&vote_average.gte=7&watch_region=US&region=US', {
+          method: 'GET',
+          headers: {
+            'authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkYTljY2JkNDViNmY1MTJjN2E0YWZmMzA5MjIxZDgyOCIsInN1YiI6IjYzZDBhM2M3NjZhZTRkMDA5ZTlkZjY4MSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.N5j1M7YnwmMTjIWMdYQbdh5suW2hCDucbqlDgMku_UA',
+            'content-type': 'application/json;charset=utf-8'
+          }
+        }).then((response) => response.json())
+          .then((data) => {
+            //console.log(data);
+            for (var json of data.results) {
+
+              if (json.poster_path === null && json.backdrop_path === null) {
+
+              }
+              if (json.poster_path !== null) {
+                const newelement = document.createElement("li");
+                var bookmarksrc = "assets/bookmark.png";
+                if (localStorage.getItem('bookmarks')) {
+                  if (JSON.parse(localStorage.getItem('bookmarks')).find(tree => parseInt(tree.id) === parseInt(json.id))) {
+                    bookmarksrc = "assets/bookmarkfilled.png";
+                    console.log('FOUND BOOOKMARK');
+                  }
+                }
+                newelement.innerHTML = `<figure class="card__thumbnail"><img id="bookmarkButton-1-${json.id}" onmouseenter="bookmarkCardHovered(this)" onmouseleave="bookmarkCardHovered(this)" data="bookmarkButton" data-id=${json.id} data-type="movie" onclick="event.stopPropagation();bookmarkCard(this)" src="${bookmarksrc}"></figure> \
+                <h3 class="card-title">${json.title}</h3> \
+                <div class="card-content"> \
+                  <h3>Description</h3> \
+                  <p>${json.overview.substring(0, 200)}</p> \
+                </div> \
+                <div class="card-link-wrapper"> \
+                  <p class="card-link">${json.release_date.split("-")[0]}</p> \
+                </div>`
+                newelement.setAttribute("style", `background:url('https://image.tmdb.org/t/p/original${json.poster_path}'); background-repeat: no-repeat; background-size: cover; background-position: center;`);
+                newelement.setAttribute("id", json.id);
+                newelement.setAttribute("class", "card");
+                newelement.setAttribute("onclick", `cardclicked(${json.id}, "${json.title}", "movie");`);
+                document.getElementById("IMDBTopmovielist").appendChild(newelement);
+              }
+            }
+          }).catch(e => {
+            console.log(e);
+          });
+        break;
+      case 21:
+        document.getElementById("popularmovielist").innerHTML = "";
+        fetch('https://api.themoviedb.org/3/movie/popular?language=en-US&sort_by=popularity.asc&page=1&with_original_language=en', {
+          method: 'GET',
+          headers: {
+            'authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkYTljY2JkNDViNmY1MTJjN2E0YWZmMzA5MjIxZDgyOCIsInN1YiI6IjYzZDBhM2M3NjZhZTRkMDA5ZTlkZjY4MSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.N5j1M7YnwmMTjIWMdYQbdh5suW2hCDucbqlDgMku_UA',
+            'content-type': 'application/json;charset=utf-8'
+          }
+        }).then((response) => response.json())
+          .then((data) => {
+            //console.log(data);
+            for (var json of data.results) {
+              //console.log(json.id);
+              //console.log(json.poster_path);
+              const newelement = document.createElement("li");
+              var bookmarksrc = "assets/bookmark.png";
+              if (localStorage.getItem('bookmarks')) {
+                if (JSON.parse(localStorage.getItem('bookmarks')).find(tree => parseInt(tree.id) === parseInt(json.id))) {
+                  bookmarksrc = "assets/bookmarkfilled.png";
+                  console.log('FOUND BOOOKMARK');
+                }
+              }
+              newelement.innerHTML = `<figure class="card__thumbnail"><img id="bookmarkButton-3-${json.id}" onmouseenter="bookmarkCardHovered(this)" onmouseleave="bookmarkCardHovered(this)" data="bookmarkButton" data-id=${json.id} data-type="movie" onclick="event.stopPropagation();bookmarkCard(this)" src="${bookmarksrc}"></figure> \
+                <h3 class="card-title">${json.title}</h3> \
+                <div class="card-content"> \
+                  <h3>Description</h3> \
+                  <p>${json.overview.substring(0, 200)}</p> \
+                </div> \
+                <div class="card-link-wrapper"> \
+                  <p class="card-link">${json.release_date.split("-")[0]}</p> \
+                </div>`
+              newelement.setAttribute("style", `background:url('https://image.tmdb.org/t/p/original${json.poster_path}'); background-repeat: no-repeat; background-size: cover; background-position: center;`);
+              newelement.setAttribute("id", json.id);
+              newelement.setAttribute("class", "card");
+              newelement.setAttribute("onclick", `cardclicked(${json.id}, "${json.title}", "movie");`);
+              document.getElementById("popularmovielist").appendChild(newelement);
+            }
+          }).catch(e => {
+            console.log(e);
+          });
+        break;
+      case 22:
+        document.getElementById("newestmovielist").innerHTML = "";
+        fetch(`https://api.themoviedb.org/3/discover/movie?language=en-US&region=US%7CUK&sort_by=release_date.desc&page=1&primary_release_year=2023%7C2022&watch_region=US%7CUK&with_original_language=en&with_release_type=3&primary_release_date.lte=${TodaysDate.toISOString().split("T")[0]}`, {
+          method: 'GET',
+          headers: {
+            'authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkYTljY2JkNDViNmY1MTJjN2E0YWZmMzA5MjIxZDgyOCIsInN1YiI6IjYzZDBhM2M3NjZhZTRkMDA5ZTlkZjY4MSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.N5j1M7YnwmMTjIWMdYQbdh5suW2hCDucbqlDgMku_UA',
+            'content-type': 'application/json;charset=utf-8'
+          }
+        }).then((response) => response.json())
+          .then((data) => {
+            //console.log(data);
+            for (var json of data.results) {
+              //console.log(json.id);
+              //console.log(json.poster_path);
+              //console.log(json.backdrop_path);
+              if (json.poster_path === null && json.backdrop_path === null) { }
+              if (json.poster_path !== null) {
+                const newelement = document.createElement("li");
+                var bookmarksrc = "assets/bookmark.png";
+                if (localStorage.getItem('bookmarks')) {
+                  if (JSON.parse(localStorage.getItem('bookmarks')).find(tree => parseInt(tree.id) === parseInt(json.id))) {
+                    bookmarksrc = "assets/bookmarkfilled.png";
+                    console.log('FOUND BOOOKMARK');
+                  }
+                }
+                newelement.innerHTML = `<figure class="card__thumbnail"><img id="bookmarkButton-2-${json.id}" onmouseenter="bookmarkCardHovered(this)" onmouseleave="bookmarkCardHovered(this)" data="bookmarkButton" data-id=${json.id} data-type="movie" onclick="event.stopPropagation();bookmarkCard(this)" src="${bookmarksrc}"></figure> \
+                <h3 class="card-title">${json.title}</h3> \
+                <div class="card-content"> \
+                  <h3>Description</h3> \
+                  <p>${json.overview.substring(0, 200)}</p> \
+                </div> \
+                <div class="card-link-wrapper"> \
+                  <p class="card-link">${json.release_date.split("-")[0]}</p> \
+                </div>`
+                newelement.setAttribute("style", `background:url('https://image.tmdb.org/t/p/original${json.poster_path}'); background-repeat: no-repeat; background-size: cover; background-position: center;`);
+                newelement.setAttribute("id", json.id);
+                //newelement.setAttribute("data-type", "movie");
+                //newelement.setAttribute("data-name", json.title);
+                //newelement.setAttribute("data-id", json.id);
+                newelement.setAttribute("class", "card");
+                newelement.setAttribute("onclick", `cardclicked(${json.id}, "${json.title}", "movie");`);
+                document.getElementById("newestmovielist").appendChild(newelement);
+
+                //document.getElementById(`${json.id}`).addEventListener("click", cardclicked(`${json.id}`));
+                //console.log(JSON.stringify(json));
+              }
+            }
+          }).catch(e => {
+            console.log(e);
+          });
+        break;
     }
   }
 }
 
-async function movieinitexample(){
+async function movieinitexample() {
   fetch('https://api.themoviedb.org/3/discover/movie?language=en-US&sort_by=popularity.desc&page=1&with_original_language=en&vote_count.gte=10000&vote_average.gte=7&watch_region=US&region=US', {
     method: 'GET',
     headers: {
@@ -1370,7 +1749,7 @@ async function movieinitexample(){
     });
 
 
-  fetch('https://api.themoviedb.org/3/movie/now_playing', {
+  fetch('https://api.themoviedb.org/3/discover/movie?language=en-US&region=US%7CUK&sort_by=release_date.desc&page=1&primary_release_year=2023%7C2022&watch_region=US%7CUK&with_original_language=en&with_release_type=3&primary_release_date.lte=2023-02-14', {
     method: 'GET',
     headers: {
       'authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkYTljY2JkNDViNmY1MTJjN2E0YWZmMzA5MjIxZDgyOCIsInN1YiI6IjYzZDBhM2M3NjZhZTRkMDA5ZTlkZjY4MSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.N5j1M7YnwmMTjIWMdYQbdh5suW2hCDucbqlDgMku_UA',
@@ -1378,7 +1757,7 @@ async function movieinitexample(){
     }
   }).then((response) => response.json())
     .then((data) => {
-      //console.log(data);
+      console.log(data);
       for (var json of data.results) {
         //console.log(json.id);
         //console.log(json.poster_path);
@@ -1459,7 +1838,7 @@ async function movieinitexample(){
     }).catch(e => {
       console.log(e);
     });
-  
+
 }
 
 //Fetch the Highest Rated TV Shows! first 20!
@@ -1621,7 +2000,7 @@ async function movieinitstonerexample() {
   }).then((response) => response.json())
     .then((data) => {
       total_pages = parseInt(data.total_pages);
-      initializeaddbypage(420, total_pages);
+      initializeaddbypagestoner(420, total_pages);
     }).catch(e => {
       console.log(e);
     });
