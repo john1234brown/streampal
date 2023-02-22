@@ -143,6 +143,8 @@ function updatewatchIdAndEtc(id, type, name) {
 function updateWatchHistoryContainers() {
   if (localStorage.getItem('watch-history')) {
     var historyJson = JSON.parse(localStorage.getItem('watch-history'));
+    document.getElementById("tvHistorylist").innerHTML = "";
+    document.getElementById("movieHistorylist").innerHTML = "";
     for (var tvobj of historyJson.tv.reverse()) {
       //console.log(tvobj);
       fetch(`https://api.themoviedb.org/3/tv/${tvobj.id}?language=en-US`, {
