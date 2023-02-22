@@ -1143,9 +1143,9 @@ function cardclicked(id, name, type) {
           document.cookie = "episode=" + 1 + "; SameSite=strict; Secure; " + kia;
           updateTvContainer();
         }
-      } else {
-        updateMovieContainer();
       }
+    } else {
+      updateMovieContainer();
     }
     document.getElementById("tababout").checked = false;
     document.getElementById("tabhome").checked = false;
