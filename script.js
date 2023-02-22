@@ -140,6 +140,86 @@ function updatewatchIdAndEtc(id, type, name) {
 
 }
 
+function updateWatchHistoryContainers() {
+  if (localStorage.getItem('watch-history')) {
+    var historyJson = JSON.parse(localStorage.getItem('watch-history'));
+    for (var tvobj of historyJson.tv.reverse()) {
+      //console.log(tvobj);
+      fetch(`https://api.themoviedb.org/3/tv/${tvobj.id}?language=en-US`, {
+        method: 'GET',
+        headers: {
+          'authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkYTljY2JkNDViNmY1MTJjN2E0YWZmMzA5MjIxZDgyOCIsInN1YiI6IjYzZDBhM2M3NjZhZTRkMDA5ZTlkZjY4MSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.N5j1M7YnwmMTjIWMdYQbdh5suW2hCDucbqlDgMku_UA',
+          'content-type': 'application/json;charset=utf-8'
+        }
+      }).then((response) => response.json())
+        .then((json) => {
+          //console.log(data);
+          //console.log(json.media_type);
+          var overview;
+          if (json.overview) {
+            overview = json.overview.substring(0, 200);
+          } else {
+            overview = "";
+          }
+          if (json.first_air_date) {
+            const newelement = document.createElement("li");
+            newelement.innerHTML = `<figure class="card__thumbnail"></figure> \
+                    <h3 class="card-title">${json.name}</h3> \
+                    <div class="card-content"> \
+                      <h3>Description</h3> \
+                      <p>${overview}</p> \
+                    </div> \
+                    <div class="card-link-wrapper"> \
+                      <p class="card-link">${json.first_air_date.split("-")[0]}</p> \
+                    </div>`
+            newelement.setAttribute("style", `background:url('https://image.tmdb.org/t/p/original${json.poster_path}'); background-repeat: no-repeat; background-size: cover; background-position: center;`);
+            newelement.setAttribute("id", json.id);
+            newelement.setAttribute("class", "card");
+            newelement.setAttribute("onclick", `cardclicked(${json.id}, "${json.name}", "tv");`);
+            document.getElementById("tvHistorylist").appendChild(newelement);
+          }
+        }).catch(e => {
+          console.log(e);
+        });
+    }
+    for (var movieobj of historyJson.movies.reverse()) {
+      //console.log(movieobj);
+      fetch(`https://api.themoviedb.org/3/movie/${movieobj.id}?language=en-US`, {
+        method: 'GET',
+        headers: {
+          'authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkYTljY2JkNDViNmY1MTJjN2E0YWZmMzA5MjIxZDgyOCIsInN1YiI6IjYzZDBhM2M3NjZhZTRkMDA5ZTlkZjY4MSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.N5j1M7YnwmMTjIWMdYQbdh5suW2hCDucbqlDgMku_UA',
+          'content-type': 'application/json;charset=utf-8'
+        }
+      }).then((response) => response.json())
+        .then((json) => {
+          var overview;
+          if (json.overview) {
+            overview = json.overview.substring(0, 200);
+          } else {
+            overview = "";
+          }
+          const newelement = document.createElement("li");
+          newelement.innerHTML = `<figure class="card__thumbnail"></figure> \
+                    <h3 class="card-title">${json.title}</h3> \
+                    <div class="card-content"> \
+                      <h3>Description</h3> \
+                      <p>${overview}</p> \
+                    </div> \
+                    <div class="card-link-wrapper"> \
+                      <p class="card-link">${json.release_date.split("-")[0]}</p> \
+                    </div>`
+          newelement.setAttribute("style", `background:url('https://image.tmdb.org/t/p/original${json.poster_path}'); background-repeat: no-repeat; background-size: cover; background-position: center;`);
+          newelement.setAttribute("id", json.id);
+          newelement.setAttribute("class", "card");
+          newelement.setAttribute("onclick", `cardclicked(${json.id}, "${json.title}", "movie");`);
+          document.getElementById("movieHistorylist").appendChild(newelement);
+        }).catch(e => {
+          console.log(e);
+        });
+    }
+  }
+}
+
 function bookmarkInit() {
   if (localStorage.getItem('bookmarks')) {
     var id = document.cookie.split('; ').find((row) => row.startsWith('watchId='))?.split('=')[1];
@@ -159,7 +239,8 @@ function bookmarkUpdate() {
   if (localStorage.getItem('bookmarks')) {
     var bookmarksJson = JSON.parse(localStorage.getItem('bookmarks'));
     document.getElementById("bookmarklist").innerHTML = "";
-    for (json1 of bookmarksJson) {
+    document.getElementById("moviebookmarklist").innerHTML = "";
+    for (var json1 of bookmarksJson) {
       switch (json1.type) {
         case "movie":
           fetch(`https://api.themoviedb.org/3/movie/${json1.id}?language=en-US`, {
@@ -190,7 +271,7 @@ function bookmarkUpdate() {
               newelement.setAttribute("id", json.id);
               newelement.setAttribute("class", "card");
               newelement.setAttribute("onclick", `cardclicked(${json.id}, "${json.title}", "movie");`);
-              document.getElementById("bookmarklist").appendChild(newelement);
+              document.getElementById("moviebookmarklist").appendChild(newelement);
             }).catch(e => {
               console.log(e);
             });
@@ -289,26 +370,27 @@ function bookmarkCard(OGObj) {
 function updateHistory(id, type, season, episode) {
   if (localStorage.getItem('watch-history')) {
     switch (type) {
-     case "movie":
-      var obj = {
-        "id": id
-      }
-      var historyJson = JSON.parse(localStorage.getItem('watch-history'));
-      if (historyJson.movies.find(moviesobj => moviesobj.id === id)) {
-        historyJson.movies = historyJson.movies.filter(x => x.id !== id);
-        historyJson.movies.push(obj);
-      } else {
-        if (historyJson.movies.length === 100){//Here we will remove the first element by doing reverse and pop then reverse again to remove the first element!
-          historyJson.movies = historyJson.movies.splice(1, historyJson.movies.length);
-          //historyJson.movies = historyJson.movies.reverse().pop().reverse();
-          //Successfully removed the very last watched item on the list
-          historyJson.movies.push(obj);
-        }else{//Here we just update the element as normal adding it to the array!
-          historyJson.movies.push(obj);
+      case "movie":
+        var obj = {
+          "id": id
         }
-      }
-      localStorage.setItem('watch-history', JSON.stringify(historyJson));
-      break;
+        var historyJson = JSON.parse(localStorage.getItem('watch-history'));
+        if (historyJson.movies.find(moviesobj => moviesobj.id === id)) {
+          historyJson.movies = historyJson.movies.filter(x => x.id !== id);
+          historyJson.movies.push(obj);
+        } else {
+          if (historyJson.movies.length === 100) {//Here we will remove the first element by doing reverse and pop then reverse again to remove the first element!
+            historyJson.movies = historyJson.movies.splice(1, historyJson.movies.length);
+            //historyJson.movies = historyJson.movies.reverse().pop().reverse();
+            //Successfully removed the very last watched item on the list
+            historyJson.movies.push(obj);
+          } else {//Here we just update the element as normal adding it to the array!
+            historyJson.movies.push(obj);
+          }
+        }
+        localStorage.setItem('watch-history', JSON.stringify(historyJson));
+        updateWatchHistoryContainers();
+        break;
 
       case "tv":
         var obj = {
@@ -321,50 +403,51 @@ function updateHistory(id, type, season, episode) {
           historyJson.tv = historyJson.tv.filter(x => x.id !== id);
           historyJson.tv.push(obj);
         } else {
-          if (historyJson.tv.length === 100){//Here we will remove the first element by doing reverse and pop then reverse again to remove the first element!
+          if (historyJson.tv.length === 100) {//Here we will remove the first element by doing reverse and pop then reverse again to remove the first element!
             historyJson.tv = historyJson.tv.splice(1, historyJson.tv.length);
             //historyJson.tv = historyJson.tv.reverse().pop().reverse();
             //Successfully removed the very last watched item on the list
             historyJson.tv.push(obj);
-          }else{//Here we just update the element as normal adding it to the array!
+          } else {//Here we just update the element as normal adding it to the array!
             historyJson.tv.push(obj);
           }
         }
         localStorage.setItem('watch-history', JSON.stringify(historyJson));
-      break;
+        updateWatchHistoryContainers();
+        break;
 
     }
-  }else { ///Here we switch through and create the Watch-history object!
-    switch (type){
+  } else { ///Here we switch through and create the Watch-history object!
+    switch (type) {
       case "movie":
-      var movieArray = [];
-      var obj = {
-        "id": id
-      }
-      movieArray.push(obj);
-      var historyJsonobj = {
-        "movies": movieArray,
-        "tv": []
-      }
-      localStorage.setItem('watch-history', JSON.stringify(historyJsonobj));
-
-      break;
+        var movieArray = [];
+        var obj = {
+          "id": id
+        }
+        movieArray.push(obj);
+        var historyJsonobj = {
+          "movies": movieArray,
+          "tv": []
+        }
+        localStorage.setItem('watch-history', JSON.stringify(historyJsonobj));
+        updateWatchHistoryContainers();
+        break;
 
       case "tv":
-      var tvArray = [];
-      var obj = {
-        "id": id,
-        "season": season,
-        "episode": episode
-      }
-      tvArray.push(obj);
-      var historyJsonobj = {
-      "movies": [],
-      "tv": tvArray
-      }
-      localStorage.setItem('watch-history', JSON.stringify(historyJsonobj));
-
-      break;
+        var tvArray = [];
+        var obj = {
+          "id": id,
+          "season": season,
+          "episode": episode
+        }
+        tvArray.push(obj);
+        var historyJsonobj = {
+          "movies": [],
+          "tv": tvArray
+        }
+        localStorage.setItem('watch-history', JSON.stringify(historyJsonobj));
+        updateWatchHistoryContainers();
+        break;
 
     }
   }
@@ -1041,11 +1124,11 @@ function cardclicked(id, name, type) {
     bookmarkInit();
     if (type === "tv") {
       //Package the History Check right Here be the optimal spot!
-      if (localStorage.getItem('watch-history')){
+      if (localStorage.getItem('watch-history')) {
         var historyJson = JSON.parse(localStorage.getItem('watch-history'));
         console.log('true');
         console.log(historyJson);
-        if (historyJson.tv.find(tvobj => parseInt(tvobj.id) === id)){
+        if (historyJson.tv.find(tvobj => parseInt(tvobj.id) === id)) {
           console.log('found!');
           var history = historyJson.tv.find(tvobj => parseInt(tvobj.id) === id);
           console.log(history.season);
@@ -1053,23 +1136,23 @@ function cardclicked(id, name, type) {
           document.cookie = "season=" + history.season + "; SameSite=strict; Secure; " + kia;
           document.cookie = "episode=" + history.episode + "; SameSite=strict; Secure; " + kia;
           updateTvContainer();
-      }else{ //Not Find so setting the season and episode to 1
-      document.cookie = "season=" + 1 + "; SameSite=strict; Secure; " + kia;
-      document.cookie = "episode=" + 1 + "; SameSite=strict; Secure; " + kia;
-      updateTvContainer();
+        } else { //Not Find so setting the season and episode to 1
+          document.cookie = "season=" + 1 + "; SameSite=strict; Secure; " + kia;
+          document.cookie = "episode=" + 1 + "; SameSite=strict; Secure; " + kia;
+          updateTvContainer();
+        }
+      } else {
+        updateMovieContainer();
       }
-    } else {
-      updateMovieContainer();
     }
+    document.getElementById("tababout").checked = false;
+    document.getElementById("tabhome").checked = false;
+    document.getElementById("tabgenre").checked = false;
+    document.getElementById("tabmovies").checked = false;
+    document.getElementById("tabtvshows").checked = false;
+    document.getElementById("tabsearch").checked = false;
+    document.getElementById("tabwatch").checked = true;
   }
-  document.getElementById("tababout").checked = false;
-  document.getElementById("tabhome").checked = false;
-  document.getElementById("tabgenre").checked = false;
-  document.getElementById("tabmovies").checked = false;
-  document.getElementById("tabtvshows").checked = false;
-  document.getElementById("tabsearch").checked = false;
-  document.getElementById("tabwatch").checked = true;
-}
 }
 
 async function tvaddbyPage(n, p) {
@@ -2049,7 +2132,7 @@ async function tvshowinitexample() {
       console.log(e);
     });
 
-  fetch('https://api.themoviedb.org/3/discover/tv?language=en-US&sort_by=release_date.desc&page=1&with_original_language=en', {
+  fetch('https://api.themoviedb.org/3/discover/tv?language=en-US&sort_by=popularity.desc&page=1&with_original_language=en', {
     method: 'GET',
     headers: {
       'authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkYTljY2JkNDViNmY1MTJjN2E0YWZmMzA5MjIxZDgyOCIsInN1YiI6IjYzZDBhM2M3NjZhZTRkMDA5ZTlkZjY4MSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.N5j1M7YnwmMTjIWMdYQbdh5suW2hCDucbqlDgMku_UA',
