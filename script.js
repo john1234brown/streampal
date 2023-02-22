@@ -1118,6 +1118,13 @@ function cardclicked(id, name, type) {
   //console.log("Id:", id, "Name:", name, "Type:", type, "Was Clicked");
   const cookieValue = document.cookie.split('; ').find((row) => row.startsWith('watchId='))?.split('=')[1];
   if (parseInt(cookieValue) === id) {
+    document.getElementById("tababout").checked = false;
+    document.getElementById("tabhome").checked = false;
+    document.getElementById("tabgenre").checked = false;
+    document.getElementById("tabmovies").checked = false;
+    document.getElementById("tabtvshows").checked = false;
+    document.getElementById("tabsearch").checked = false;
+    document.getElementById("tabwatch").checked = true;
   } else {
     console.log('Else');
     updatewatchIdAndEtc(id, type, name);
