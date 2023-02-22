@@ -1053,7 +1053,6 @@ function cardclicked(id, name, type) {
           document.cookie = "season=" + history.season + "; SameSite=strict; Secure; " + kia;
           document.cookie = "episode=" + history.episode + "; SameSite=strict; Secure; " + kia;
           updateTvContainer();
-        }
       }else{ //Not Find so setting the season and episode to 1
       document.cookie = "season=" + 1 + "; SameSite=strict; Secure; " + kia;
       document.cookie = "episode=" + 1 + "; SameSite=strict; Secure; " + kia;
@@ -1070,6 +1069,7 @@ function cardclicked(id, name, type) {
   document.getElementById("tabtvshows").checked = false;
   document.getElementById("tabsearch").checked = false;
   document.getElementById("tabwatch").checked = true;
+}
 }
 
 async function tvaddbyPage(n, p) {
