@@ -137,7 +137,6 @@ function updatewatchIdAndEtc(id, type, name) {
   /*
   * Memory Note Please don't forget to add a updateExternalId
   */
-  document.cookie
 
 }
 
@@ -287,6 +286,91 @@ function bookmarkCard(OGObj) {
   }
 }
 
+function updateHistory(id, type, season, episode) {
+  if (localStorage.getItem('watch-history')) {
+    switch (type) {
+     case "movie":
+      var obj = {
+        "id": id
+      }
+      var historyJson = JSON.parse(localStorage.getItem('watch-history'));
+      if (historyJson.movies.find(moviesobj => moviesobj.id === id)) {
+        historyJson.movies = historyJson.movies.filter(x => x.id !== id);
+        historyJson.movies.push(obj);
+      } else {
+        if (historyJson.movies.length === 100){//Here we will remove the first element by doing reverse and pop then reverse again to remove the first element!
+          historyJson.movies = historyJson.movies.splice(1, historyJson.movies.length);
+          //historyJson.movies = historyJson.movies.reverse().pop().reverse();
+          //Successfully removed the very last watched item on the list
+          historyJson.movies.push(obj);
+        }else{//Here we just update the element as normal adding it to the array!
+          historyJson.movies.push(obj);
+        }
+      }
+      localStorage.setItem('watch-history', JSON.stringify(historyJson));
+      break;
+
+      case "tv":
+        var obj = {
+          "id": id,
+          "season": season,
+          "episode": episode,
+        }
+        var historyJson = JSON.parse(localStorage.getItem('watch-history'));
+        if (historyJson.tv.find(tvobj => tvobj.id === id)) {
+          historyJson.tv = historyJson.tv.filter(x => x.id !== id);
+          historyJson.tv.push(obj);
+        } else {
+          if (historyJson.tv.length === 100){//Here we will remove the first element by doing reverse and pop then reverse again to remove the first element!
+            historyJson.tv = historyJson.tv.splice(1, historyJson.tv.length);
+            //historyJson.tv = historyJson.tv.reverse().pop().reverse();
+            //Successfully removed the very last watched item on the list
+            historyJson.tv.push(obj);
+          }else{//Here we just update the element as normal adding it to the array!
+            historyJson.tv.push(obj);
+          }
+        }
+        localStorage.setItem('watch-history', JSON.stringify(historyJson));
+      break;
+
+    }
+  }else { ///Here we switch through and create the Watch-history object!
+    switch (type){
+      case "movie":
+      var movieArray = [];
+      var obj = {
+        "id": id
+      }
+      movieArray.push(obj);
+      var historyJsonobj = {
+        "movies": movieArray,
+        "tv": []
+      }
+      localStorage.setItem('watch-history', JSON.stringify(historyJsonobj));
+
+      break;
+
+      case "tv":
+      var tvArray = [];
+      var obj = {
+        "id": id,
+        "season": season,
+        "episode": episode
+      }
+      tvArray.push(obj);
+      var historyJsonobj = {
+      "movies": [],
+      "tv": tvArray
+      }
+      localStorage.setItem('watch-history', JSON.stringify(historyJsonobj));
+
+      break;
+
+    }
+  }
+}
+
+
 function bookmark() {
   //console.log('Bookmark Clicked!');
   if (localStorage.getItem('bookmarks')) {
@@ -349,7 +433,7 @@ function bookmarkHovered() {
 function bookmarkCardHovered(obj) {
   //var src = document.getElementById("bookmarkButton").getAttribute('src');
   if (obj.src.split('assets/')[1] === "bookmarkfilled.png") {
-    console.log(obj.src.split('assets/')[1]);
+    //console.log(obj.src.split('assets/')[1]);
     document.getElementById(obj.id).setAttribute('src', 'assets/bookmark.png');
   } else {
     document.getElementById(obj.id).setAttribute('src', 'assets/bookmarkfilled.png');
@@ -567,6 +651,7 @@ function updateMovieContainer() {
     const cookieValue = document.cookie.split('; ').find((row) => row.startsWith('watchId='))?.split('=')[1];
     id = cookieValue;
     updateMovieAdServers(id);
+    updateHistory(id, "movie", null, null);
     if (server === 1) {
       fetch(`https://api.themoviedb.org/3/movie/${id}/external_ids`, {
         method: 'GET',
@@ -844,10 +929,6 @@ function updateTvAdServers(id, season, episode) {
   } else { return; }
 }
 
-function updateHistory(id, season, episode) {
-  return;
-}
-
 function updateTvPlayer(season, episode) {
   const d = new Date();
   d.setTime(d.getTime() + (7 * 24 * 60 * 60 * 1000));
@@ -857,6 +938,7 @@ function updateTvPlayer(season, episode) {
   const cookieValue = document.cookie.split('; ').find((row) => row.startsWith('watchId='))?.split('=')[1];
   var id = cookieValue;
   bookmarkInit();
+  updateHistory(id, "tv", season, episode);
   updateTvAdServers(id, season, episode);
   //updateHistory(id, season, episode);
   if (server === 1) {
@@ -944,21 +1026,39 @@ function test() {
 }
 
 function cardclicked(id, name, type) {
+  console.log('cardClicked');
+  const d = new Date();
+  d.setTime(d.getTime() + (7 * 24 * 60 * 60 * 1000));
+  var kia = "expires=" + d.toUTCString();
   //console.log("Id:", id, "Name:", name, "Type:", type, "Was Clicked");
   const cookieValue = document.cookie.split('; ').find((row) => row.startsWith('watchId='))?.split('=')[1];
-  if (cookieValue === id) {
+  if (parseInt(cookieValue) === id) {
   } else {
-    const d = new Date();
-    d.setTime(d.getTime() + (7 * 24 * 60 * 60 * 1000));
-    var kia = "expires=" + d.toUTCString();
-    document.cookie = "season=" + 1 + "; SameSite=strict; Secure; " + kia;
-    document.cookie = "episode=" + 1 + "; SameSite=strict; Secure; " + kia;
+    console.log('Else');
     updatewatchIdAndEtc(id, type, name);
     //updatewatchName(name);
     //updatewatchType(type);
     bookmarkInit();
     if (type === "tv") {
+      //Package the History Check right Here be the optimal spot!
+      if (localStorage.getItem('watch-history')){
+        var historyJson = JSON.parse(localStorage.getItem('watch-history'));
+        console.log('true');
+        console.log(historyJson);
+        if (historyJson.tv.find(tvobj => parseInt(tvobj.id) === id)){
+          console.log('found!');
+          var history = historyJson.tv.find(tvobj => parseInt(tvobj.id) === id);
+          console.log(history.season);
+          console.log(history.episode);
+          document.cookie = "season=" + history.season + "; SameSite=strict; Secure; " + kia;
+          document.cookie = "episode=" + history.episode + "; SameSite=strict; Secure; " + kia;
+          updateTvContainer();
+        }
+      }else{ //Not Find so setting the season and episode to 1
+      document.cookie = "season=" + 1 + "; SameSite=strict; Secure; " + kia;
+      document.cookie = "episode=" + 1 + "; SameSite=strict; Secure; " + kia;
       updateTvContainer();
+      }
     } else {
       updateMovieContainer();
     }
