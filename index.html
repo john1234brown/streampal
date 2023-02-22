@@ -69,28 +69,60 @@
 
 
     <!--Beginning Of Home Tab --->
-    <input type="radio" id="tabhome" name="mytabs">
+    <input type="radio" id="tabhome" name="mytabs" checked>
     <label id="tabhomelabel" for="tabhome"><b>Home</b></label>
     <div class="tab">
       <h2 class="mainTitle">Home</h2>
       <article style="text-align: right">
-        <div style="display:flexbox;">
-          <div style="background-color:#242424;display:flexbox">
-            <h3 style="text-align:center; line-height: 0; padding-top:1.2rem; padding-bottom:0rem;">Bookmarks</h3>
+        <div style="display:flexbox;background-color:#292929;">
+          <div style="background-color:#000000;display:flexbox">
+            <h2 style="text-align:center; line-height: 0; padding-top:2.2rem; padding-bottom:0rem;">Bookmarks</h2>
             <p style="padding-top:.9rem; padding-bottom:0rem; margin-bottom:0rem;"><input type="checkbox"
                 id="bookmarkMinimize" style="padding-bottom:0rem;"> Minimize</input></p>
-            <p style="padding-top:.9rem; padding-bottom:0rem; margin-bottom:0rem;"><input type="checkbox"
+            <!-- <p style="padding-top:.9rem; padding-bottom:0rem; margin-bottom:0rem;"><input type="checkbox"
                 id="bookmarkshowAll" style="padding-bottom:0rem;" onclick="bookmarkshowAll(this)"> Show All</input>
-            </p>
+            </p> -->
           </div>
           <span id="Bookmarks">
+            <h3 style="text-align:center; line-height: 0; padding-top:2.6rem; padding-bottom:0rem;">Tv Shows</h3>
             <div class="containerofCards">
               <ul id="bookmarklist" class="cards">
+              </ul>
+            </div>
+            <h3 style="text-align:center; line-height: 0; padding-top:0.2rem; padding-bottom:0rem;">Movies</h3>
+            <div class="containerofCards">
+              <ul id="moviebookmarklist" class="cards">
               </ul>
             </div>
           </span>
         </div>
       </article>
+      <!-- Beginning of the Watch History-->
+      <article style="text-align: right;padding-top:0rem; margin-top: 0rem;">
+        <div style="display:flexbox;background-color:#292929;">
+          <!--border: 1rem solid #025a15 -->
+          <div style="background-color:#025a15;display:flexbox">
+            <h2 style="text-align:center; line-height: 0; padding-top:2.2rem; padding-bottom:0rem;">Watch History</h2>
+            <p style="padding-top:.9rem; padding-bottom:0rem; margin-bottom:0rem;"><input type="checkbox"
+                id="watchHistoryMinimize" style="padding-bottom:0rem;"> Minimize</input></p>
+          </div>
+          <span id="WatchHistory">
+            <h3 style="text-align:center; line-height: 0; padding-top:2.6rem; padding-bottom:0rem;">Tv Shows</h3>
+            <div class="containerofCards">
+              <ul id="tvHistorylist" class="cards">
+              </ul>
+            </div>
+            <h3 style="text-align:center; line-height: 0; padding-top:0.2rem; padding-bottom:0rem;">Movies</h3>
+            <div class="containerofCards">
+              <ul id="movieHistorylist" class="cards">
+              </ul>
+            </div>
+          </span>
+        </div>
+      </article>
+
+
+
     </div>
     <!-- End Of Home Tab --->
 
@@ -121,7 +153,8 @@
               <p style="padding-top:.9rem; padding-bottom:0rem; margin-bottom:0rem;"><input type="checkbox"
                   id="MostPopularMoviesMinimize" style="padding-bottom:0rem;"> Minimize</input></p>
               <p style="padding-top:.9rem; padding-bottom:0rem; margin-bottom:0rem;"><input type="checkbox"
-                  id="MostPopularMoviesshowAll" style="padding-bottom:0rem;" onclick="tvshowAll(21, this)"> Show All</input></p>
+                  id="MostPopularMoviesshowAll" style="padding-bottom:0rem;" onclick="tvshowAll(21, this)"> Show
+                All</input></p>
             </div>
             <span id="MostPopularMovies">
               <div class="containerofCards">
@@ -132,14 +165,15 @@
           </div>
         </article>
 
-        <article style="text-align: right">
+        <article style="text-align: right; padding-top:0rem; margin-top: 0rem;">
           <div style="display: flexbox;">
             <div style="background-color:#025a15; display:flexbox">
               <h3 style="text-align:center; line-height: 0; padding-top:1.2rem; padding-bottom:0rem;">Top IMDB</h3>
               <p style="padding-top:.9rem; padding-bottom:0rem; margin-bottom:0rem;"><input type="checkbox"
                   id="IMDBTopMoviesMinimize"> Minimize</input></p>
               <p style="padding-top:.9rem; padding-bottom:0rem; margin-bottom:0rem;"><input type="checkbox"
-                  id="IMDBTopMoviesshowAll" style="padding-bottom:0rem;" onclick="tvshowAll(20, this)"> Show All</input></p>
+                  id="IMDBTopMoviesshowAll" style="padding-bottom:0rem;" onclick="tvshowAll(20, this)"> Show All</input>
+              </p>
             </div>
             <span id="IMDBTopMovies">
               <div class="containerofCards">
@@ -150,14 +184,15 @@
           </div>
         </article>
 
-        <article style="text-align: right">
+        <article style="text-align: right; padding-top:0rem; margin-top: 0rem;">
           <div style="display:flexbox;">
             <div style="background-color:#242424;display:flexbox">
               <h3 style="text-align:center; line-height: 0; padding-top:1.2rem; padding-bottom:0rem;">Newest</h3>
               <p style="padding-top:.9rem; padding-bottom:0rem; margin-bottom:0rem;"><input type="checkbox"
                   id="NewestMoviesMinimize" style="padding-bottom:0rem;"> Minimize</input></p>
               <p style="padding-top:.9rem; padding-bottom:0rem; margin-bottom:0rem;"><input type="checkbox"
-                  id="NewestMoviesshowAll" style="padding-bottom:0rem;" onclick="tvshowAll(22, this)"> Show All</input></p>
+                  id="NewestMoviesshowAll" style="padding-bottom:0rem;" onclick="tvshowAll(22, this)"> Show All</input>
+              </p>
             </div>
             <span id="NewestMovies">
               <div class="containerofCards">
@@ -168,7 +203,7 @@
           </div>
         </article>
 
-        <article style="text-align: right">
+        <article style="text-align: right; padding-top:0rem; margin-top: 0rem;">
           <div style="display: flexbox;">
             <div style="background-color:#025a15; display:flexbox">
               <h3 style="text-align:center; line-height: 0; padding-top:1.2rem; padding-bottom:0rem;">Stoner Collection
@@ -228,7 +263,7 @@
         </div>
       </article>
 
-      <article style="text-align: right">
+      <article style="text-align: right;padding-top:0rem; margin-top: 0rem;">
         <div style="display: flexbox;">
           <div style="background-color:#025a15; display:flexbox">
             <h3 style="text-align:center; line-height: 0; padding-top:1.2rem; padding-bottom:0rem;">Top IMDB</h3>
@@ -246,7 +281,7 @@
         </div>
       </article>
 
-      <article style="text-align: right">
+      <article style="text-align: right;padding-top:0rem; margin-top: 0rem;">
         <div style="display:flexbox;">
           <div style="background-color:#242424;display:flexbox">
             <h3 style="text-align:center; line-height: 0; padding-top:1.2rem; padding-bottom:0rem;">Newest</h3>
@@ -264,7 +299,7 @@
         </div>
       </article>
 
-      <article style="text-align: right">
+      <article style="text-align: right;padding-top:0rem; margin-top: 0rem;">
         <div style="display: flexbox;">
           <div style="background-color:#025a15; display:flexbox">
             <h3 style="text-align:center; line-height: 0; padding-top:1.2rem; padding-bottom:0rem;">Stoner Flixs</h3>
@@ -283,7 +318,7 @@
 
 
     <!-- Beginning of The Search Tab -->
-    <input type="radio" id="tabsearch" name="mytabs" checked>
+    <input type="radio" id="tabsearch" name="mytabs">
     <label for="tabsearch" id="tabsearchlabel"><b>Search</b></label>
     <div class="tab">
       <h2 class="mainTitle">Search For A Movie or TV Show</h2>
@@ -414,49 +449,22 @@
         <div id="filecontainer" class="seasonlist" style="display:none">
           <h2 class="mainTitleseasons">File Selector</h2>
           <div id="filelist" class="seasonnumbers">
-            <div class="seasonobj">File 1</div>
-            <div class="seasonobj">File 2</div>
-            <div class="seasonobj">File 3</div>
-            <div class="seasonobj">File 4</div>
           </div>
         </div>
         <div id="urlcontainer" class="seasonlist" style="display:none">
           <h2 class="mainTitleseasons">Url Selector</h2>
           <div id="urllist" class="seasonnumbers">
-            <div class="seasonobj">Url 1</div>
-            <div class="seasonobj">Url 2</div>
-            <div class="seasonobj">Url 3</div>
-            <div class="seasonobj">Url 4</div>
           </div>
         </div>
 
         <div id="seasoncontainer" class="containerofCards2">
           <h2 class="mainTitleseasons">Seasons</h2>
           <ul id="listofseasons" class="cards2">
-            <div class="card2">Season 1</div>
-            <div class="card2">Season 1</div>
-            <div class="card2">Season 1</div>
-            <div class="card2">Season 1</div>
           </ul>
         </div>
         <div id="episodecontainer" class="containerofCards2">
           <h2 class="mainTitleseasons">episodes</h2>
           <div id="listofepisodes" class="cards2">
-            <div class="card3">Episode 1</div>
-            <div class="card3">Episode 2</div>
-            <div class="card3">Episode 3</div>
-            <div class="card3">Episode 4</div>
-            <div class="card3">Episode 1</div>
-            <div class="card3">Episode 2</div>
-            <div class="card3">Episode 3</div>
-            <div class="card3">Episode 4</div>
-            <div class="card3">Episode 1</div>
-            <div class="card3">Episode 2</div>
-            <div class="card3">Episode 3</div>
-            <div class="card3">Episode 4</div>
-            <div class="card3">Episode 1</div>
-            <div class="card3">Episode 2</div>
-            <div class="card3">Episode 3</div>
           </div>
         </div>
       </div>
@@ -470,14 +478,13 @@
 
 <footer>
   <p class="footerClass">
-    <span>
-      &copy; &reg;2023 StreamPal MIT
+    <span>&copy; &reg;2023 StreamPal MIT</span>
   </p>
   <p class="footerClass"> This website does not host any of the files listed or previewed or viewied on our site. So we
     are not liable for any copyright files please reach out to the file providers if you have any issues!</p>
+  <p class="footerClass"><span style="display:flex; justify-content: center;">&rightharpoonup;&CupCap;&angmsdaa;</span>
+  </p>
   <img class="footerClassImg" src="assets/footers/banner.png">
-  <span style="display:flex; justify-content: center;">&rightharpoonup;&CupCap;&angmsdaa;</span>
-
 </footer>
 
 </html>
