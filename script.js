@@ -681,7 +681,7 @@ function updateMovieContainer() {
     if (server === 4) {
       //document.getElementById("watchMoviePlayer").setAttribute('sandbox', "allow-forms allow-modals allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation");
       document.getElementById("watchMoviePlayer").removeAttribute('sandbox');
-      document.getElementById("watchMoviePlayer").setAttribute('src', `https://www.2embed.to/embed/tmdb/movie?id=${id}/`);//13612
+      document.getElementById("watchMoviePlayer").setAttribute('src', `https://www.2embed.org/embed/tmdb/movie?id=${id}/`);//13612
     }
 
     if (server === 5) {
@@ -709,7 +709,7 @@ function updateMovieContainer() {
       try {
         //document.getElementById("watchTvPlayer").removeAttribute('sandbox');
         var Loc = (server - 6);
-        if (adServersList[Loc].server === "doodstream" || adServersList[Loc].server === "streamsb" || adServersList[Loc].server === "highload" || adServersList[Loc].server === "fembed") {
+        if (adServersList[Loc].server === "doodstream" || adServersList[Loc].server === "streamsb" || adServersList[Loc].server === "highload" || adServersList[Loc].server === "fembed" || adServersList[Loc].server === "vidcloud" || adServersList[Loc].server === "mixdrop") {
           //console.log("Its sandbox detection so removing sandbox please have ad blocker or brave browser recommended!");
           document.getElementById("watchMoviePlayer").removeAttribute('sandbox');
         } else { document.getElementById("watchTvPlayer").setAttribute('sandbox', "allow-forms allow-modals allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation"); }
@@ -859,7 +859,7 @@ function updateMovieAdServers(id) {
           'url': `${json.url}`
         };
         adServersList.push(obj);
-        if (json.server === "doodstream" || json.server === "streamsb" || json.server === "highload" || json.server === "fembed" || json.server === "vidcloud") {
+        if (json.server === "doodstream" || json.server === "streamsb" || json.server === "highload" || json.server === "fembed" || json.server === "vidcloud" || json.server === "mixdrop") {
           const newelement = document.createElement("li");
           newelement.innerHTML = `${json.server}`
           newelement.setAttribute("class", "card2");
@@ -905,7 +905,7 @@ function updateTvAdServers(id, season, episode) {
           'url': `${json.url}`
         };
         adServersList.push(obj);
-        if (json.server === "doodstream" || json.server === "streamsb" || json.server === "highload" || json.server === "fembed" || json.server === "vidcloud") {
+        if (json.server === "doodstream" || json.server === "streamsb" || json.server === "highload" || json.server === "fembed" || json.server === "vidcloud" || json.server === "mixdrop") {
           const newelement = document.createElement("li");
           newelement.innerHTML = `${json.server}`
           newelement.setAttribute("class", "card2");
@@ -971,7 +971,7 @@ function updateTvPlayer(season, episode) {
   if (server === 4) {
     document.getElementById("watchTvPlayer").removeAttribute('sandbox');
     //document.getElementById("watchTvPlayer").setAttribute('sandbox', "allow-same-origin allow-scripts allow-top-navigation");
-    document.getElementById("watchTvPlayer").setAttribute('src', `https://www.2embed.to/embed/tmdb/tv?id=${id}&s=${season}&e=${episode}`);
+    document.getElementById("watchTvPlayer").setAttribute('src', `https://www.2embed.org/embed/tmdb/tv?id=${id}&s=${season}&e=${episode}`);
   }//https://www.2embed.to/embed/tmdb/tv?id=76479&s=1&e=1
 
   if (server === 5) {
@@ -987,7 +987,7 @@ function updateTvPlayer(season, episode) {
     try {
       //document.getElementById("watchTvPlayer").removeAttribute('sandbox');
       var Loc = (server - 6);
-      if (adServersList[Loc].server === "doodstream" || adServersList[Loc].server === "streamsb" || adServersList[Loc].server === "highload" || adServersList[Loc].server === "fembed") {
+      if (adServersList[Loc].server === "doodstream" || adServersList[Loc].server === "streamsb" || adServersList[Loc].server === "highload" || adServersList[Loc].server === "fembed" || adServersList[Loc].server === "vidcloud" || adServersList[Loc].server === "mixdrop") {
         //console.log("Its sandbox detection so removing sandbox please have ad blocker or brave browser recommended!");
         document.getElementById("watchTvPlayer").removeAttribute('sandbox');
       } else { document.getElementById("watchTvPlayer").setAttribute('sandbox', "allow-forms allow-modals allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation"); }
@@ -2049,7 +2049,7 @@ async function tvshowinitexample() {
       console.log(e);
     });
 
-  fetch('https://api.themoviedb.org/3/discover/tv?language=en-US&sort_by=popularity.desc&page=1&with_original_language=en', {
+  fetch('https://api.themoviedb.org/3/discover/tv?language=en-US&sort_by=release_date.desc&page=1&with_original_language=en', {
     method: 'GET',
     headers: {
       'authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkYTljY2JkNDViNmY1MTJjN2E0YWZmMzA5MjIxZDgyOCIsInN1YiI6IjYzZDBhM2M3NjZhZTRkMDA5ZTlkZjY4MSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.N5j1M7YnwmMTjIWMdYQbdh5suW2hCDucbqlDgMku_UA',
