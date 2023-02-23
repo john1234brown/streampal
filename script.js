@@ -1177,7 +1177,7 @@ async function updateRecommendedAndSimilar() {
   if (Id && type) {
     switch (type) {
       case "tv":
-        fetch(`https://api.themoviedb.org/3/tv/${Id}/similar?language=en-US&page=1`, {
+        fetch(`https://api.themoviedb.org/3/tv/${Id}/recommendations?language=en-US&page=1`, {
           method: 'GET',
           headers: {
             'authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkYTljY2JkNDViNmY1MTJjN2E0YWZmMzA5MjIxZDgyOCIsInN1YiI6IjYzZDBhM2M3NjZhZTRkMDA5ZTlkZjY4MSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.N5j1M7YnwmMTjIWMdYQbdh5suW2hCDucbqlDgMku_UA',
@@ -1211,7 +1211,7 @@ async function updateRecommendedAndSimilar() {
         break;
 
       case "movie":
-        fetch(`https://api.themoviedb.org/3/movie/${Id}/recommended?language=en-US&page=1`, {
+        fetch(`https://api.themoviedb.org/3/movie/${Id}/recommendations?language=en-US&page=1`, {
           method: 'GET',
           headers: {
             'authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkYTljY2JkNDViNmY1MTJjN2E0YWZmMzA5MjIxZDgyOCIsInN1YiI6IjYzZDBhM2M3NjZhZTRkMDA5ZTlkZjY4MSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.N5j1M7YnwmMTjIWMdYQbdh5suW2hCDucbqlDgMku_UA',
@@ -1519,7 +1519,7 @@ async function tvaddbyPage(n, p) {
       if (Id && type) {
         switch (type) {
           case "tv":
-            fetch(`https://api.themoviedb.org/3/tv/${Id}/similar?language=en-US&page=${(p + 1)}`, {
+            fetch(`https://api.themoviedb.org/3/tv/${Id}/recommendations?language=en-US&page=${(p + 1)}`, {
               method: 'GET',
               headers: {
                 'authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkYTljY2JkNDViNmY1MTJjN2E0YWZmMzA5MjIxZDgyOCIsInN1YiI6IjYzZDBhM2M3NjZhZTRkMDA5ZTlkZjY4MSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.N5j1M7YnwmMTjIWMdYQbdh5suW2hCDucbqlDgMku_UA',
@@ -1565,7 +1565,7 @@ async function tvaddbyPage(n, p) {
             break;
 
           case "movie":
-            fetch(`https://api.themoviedb.org/3/movie/${Id}/similar?language=en-US&page=${(p + 1)}`, {
+            fetch(`https://api.themoviedb.org/3/movie/${Id}/recommendations?language=en-US&page=${(p + 1)}`, {
               method: 'GET',
               headers: {
                 'authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkYTljY2JkNDViNmY1MTJjN2E0YWZmMzA5MjIxZDgyOCIsInN1YiI6IjYzZDBhM2M3NjZhZTRkMDA5ZTlkZjY4MSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.N5j1M7YnwmMTjIWMdYQbdh5suW2hCDucbqlDgMku_UA',
